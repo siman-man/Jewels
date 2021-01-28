@@ -17,6 +17,10 @@ const int GRID_SIZE = MAX_N + 2;
 const int X = -1;
 const int E = -2;
 
+inline int calcZ(int y, int x) {
+  return x * GRID_SIZE + y;
+}
+
 const int LINE_SCORE[MAX_N + 1] = {
   0, 0, 0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196
 };
@@ -70,33 +74,34 @@ const int CHAIN_PATTERN[1][GRID_SIZE * GRID_SIZE] = {
 struct Move {
   int fromY;
   int fromX;
+  int fromZ;
   int toY;
   int toX;
+  int toZ;
 
   Move(int fromY = -1, int fromX = -1, int toY = -1, int toX = -1) {
     this->fromY = fromY;
     this->fromX = fromX;
+    this->fromZ = calcZ(fromY, fromX);
     this->toY = toY;
     this->toX = toX;
+    this->toZ = calcZ(toY, toX);
   }
 
   string to_str() {
-    return to_string(fromY) + " " + to_string(fromX) + " " + to_string(toY) + " " + to_string(toX);
+    return to_string(fromY - 1) + " " + to_string(fromX - 1) + " " + to_string(toY - 1) + " " + to_string(toX - 1);
   }
 };
 
 int N;
 int C;
 int g_grid[GRID_SIZE * GRID_SIZE];
+int g_copyGrid[GRID_SIZE * GRID_SIZE];
 int g_targetGrid[GRID_SIZE * GRID_SIZE];
 int g_jewelsCounter[MAX_C + 1];
 ll g_removed[GRID_SIZE * GRID_SIZE];
 int g_turn;
 ll g_removeId;
-
-inline int calcZ(int y, int x) {
-  return x * GRID_SIZE + y;
-}
 
 class JewelsSolver {
 public:
@@ -139,12 +144,11 @@ public:
 
   void run() {
     showGrid();
+
     for (int i = 0; i < MOVE_NUM; i++) {
-      int r1 = 0;
-      int c1 = i % N;
-      int r2 = 1 + (i % (N - 1));
-      int c2 = c1;
-      Move move(r1, c1, r2, c2);
+      // fprintf(stderr, "turn %d: \n", g_turn);
+      Move move = selectBestMove();
+      // Move move(r1, c1, r2, c2);
       cout << move.to_str() << endl;
       cout.flush();
       readGridData();
@@ -155,10 +159,43 @@ public:
     }
   }
 
-  int applyMove() {
+  Move selectBestMove() {
+    int bestScore = -1;
+    Move bestMove;
+
+    for (int x = 1; x <= N; ++x) {
+      for (int y = 1; y <= N; ++y) {
+        int z1 = calcZ(y, x);
+
+        for (int x2 = x; x2 <= N; ++x2) {
+          for (int y2 = y; y2 <= N; ++y2) {
+            int z2 = calcZ(y2, x2);
+            if (z2 <= z1) continue;
+
+            memcpy(g_copyGrid, g_grid, sizeof(g_grid));
+
+            Move move(y, x, y2, x2);
+            int score = applyMove(move);
+
+            if (bestScore < score) {
+              bestScore = score;
+              bestMove = move;
+            }
+
+            memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
+          }
+        }
+      }
+    }
+
+    return bestMove;
+  }
+
+  int applyMove(Move &move) {
     int moveScore = 0;
     int combo = 0;
     bool matched = true;
+    swap(g_grid[move.fromZ], g_grid[move.toZ]);
 
     while (matched) {
       matched = false;
@@ -172,10 +209,11 @@ public:
           int z1 = calcZ(y, x);
           int z2 = calcZ(y, x + 1);
 
-          if (g_grid[z1] == g_grid[z2]) {
+          if (g_grid[z1] != E && g_grid[z1] == g_grid[z2]) {
             ++match;
           } else {
             if (match >= 2) {
+              moveScore += calcLineScore(match + 1);
               matched = true;
 
               for (int x2 = x - match; x2 <= x; ++x2) {
@@ -189,6 +227,7 @@ public:
         }
 
         if (match >= 2) {
+          moveScore += calcLineScore(match + 1);
           matched = true;
 
           for (int x2 = N - match; x2 <= N; ++x2) {
@@ -206,29 +245,49 @@ public:
           int z1 = calcZ(y, x);
           int z2 = calcZ(y + 1, x);
 
-          if (g_grid[z1] == g_grid[z2]) {
+          if (g_grid[z1] != E && g_grid[z1] == g_grid[z2]) {
             ++match;
           } else {
-            matched = true;
+            if (match >= 2) {
+              moveScore += calcLineScore(match + 1);
+              matched = true;
 
-            for (int y2 = y - match; y2 <= y; ++y2) {
-              int z = calcZ(y2, x);
-              g_removed[z] = g_removeId;
+              for (int y2 = y - match; y2 <= y; ++y2) {
+                int z = calcZ(y2, x);
+                g_removed[z] = g_removeId;
+              }
             }
 
             match = 0;
           }
         }
 
-        for (int y2 = N - match; y2 <= N; ++y2) {
-          int z = calcZ(y2, x);
-          g_removed[z] = g_removeId;
+        if (match >= 2) {
+          moveScore += calcLineScore(match + 1);
+          matched = true;
+
+          for (int y2 = N - match; y2 <= N; ++y2) {
+            int z = calcZ(y2, x);
+            g_removed[z] = g_removeId;
+          }
         }
       }
 
       // fall jewels
-      for (int y = 1; y <= N; ++y) {
-        for (int x = 1; x <= N; ++x) {
+      for (int x = 1; x <= N; ++x) {
+        int removedCnt = 0;
+
+        for (int y = 1; y <= N; ++y) {
+          int z = calcZ(y, x);
+
+          if (g_removed[z] == g_removeId) {
+            ++removedCnt;
+          }
+
+          int temp = g_grid[z];
+          int nz = calcZ(y - removedCnt, x);
+          g_grid[z] = E;
+          g_grid[nz] = temp;
         }
       }
 
