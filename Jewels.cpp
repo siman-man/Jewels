@@ -69,6 +69,8 @@ const int CHAIN_PATTERN[1][GRID_SIZE * GRID_SIZE] = {
 int N;
 int C;
 int g_grid[GRID_SIZE * GRID_SIZE];
+int g_jewelsCounter[MAX_C + 1];
+int g_turn;
 
 inline int calcZ(int y, int x) {
   return y * GRID_SIZE + x;
@@ -81,6 +83,8 @@ public:
     cin >> C;
 
     fprintf(stderr, "N: %d, C: %d\n", N, C);
+
+    g_turn = 0;
     memset(g_grid, X, sizeof(g_grid));
     readGridData();
   }
@@ -99,11 +103,22 @@ public:
   }
 
   void updateGridData() {
+    memset(g_jewelsCounter, 0, sizeof(g_jewelsCounter));
+
     for (int y = 1; y <= N; ++y) {
       for (int x = 1; x <= N; ++x) {
         int z = calcZ(y, x);
+        int color = g_grid[z];
+        g_jewelsCounter[color]++;
       }
     }
+
+    fprintf(stderr, "%d: (", g_turn);
+    for (int color = 1; color <= C; ++color) {
+      fprintf(stderr, "%2d", g_jewelsCounter[color]);
+      if (color < C) fprintf(stderr, ", ");
+    }
+    fprintf(stderr, ")\n");
   }
 
   void run() {
@@ -115,8 +130,10 @@ public:
       cout << r1 << " " << c1 << " " << r2 << " " << c2 << endl;
       cout.flush();
       readGridData();
+      updateGridData();
       int runtime;
       cin >> runtime;
+      ++g_turn;
     }
   }
 
