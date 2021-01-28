@@ -15,7 +15,9 @@ const int MAX_C = 10;
 const int MOVE_NUM = 1000;
 const int GRID_SIZE = MAX_N + 2;
 const int X = -1;
+const int WALL = X;
 const int E = -2;
+const int DZ[4] = {-GRID_SIZE, 1, GRID_SIZE, -1};
 
 inline int calcZ(int y, int x) {
   return x * GRID_SIZE + y;
@@ -156,6 +158,8 @@ public:
       int runtime;
       cin >> runtime;
       ++g_turn;
+
+      // fprintf(stderr, "[%d]: runtime: %d\n", g_turn, runtime);
     }
   }
 
@@ -171,6 +175,7 @@ public:
           for (int y2 = y; y2 <= N; ++y2) {
             int z2 = calcZ(y2, x2);
             if (z2 <= z1) continue;
+            if (g_grid[z1] == g_grid[z2]) continue;
 
             memcpy(g_copyGrid, g_grid, sizeof(g_grid));
 
@@ -191,11 +196,31 @@ public:
     return bestMove;
   }
 
+  bool isFire(int z) {
+    for (int direct = 0; direct < 4; ++direct) {
+      int nz = z + DZ[direct];
+      if (g_grid[nz] == WALL) continue;
+      int nnz = nz + DZ[direct];
+      int bnz = z + DZ[(direct + 2) % 4];
+
+      if (g_grid[z] == g_grid[nz]) {
+        if (g_grid[z] == g_grid[nnz]) return true;
+        if (g_grid[z] == g_grid[bnz]) return true;
+      }
+    }
+
+    return false;
+  }
+
   int applyMove(Move &move) {
     int moveScore = 0;
     int combo = 0;
     bool matched = true;
     swap(g_grid[move.fromZ], g_grid[move.toZ]);
+
+    if (!isFire(move.fromZ) && !isFire(move.toZ)) {
+      return 0;
+    }
 
     while (matched) {
       matched = false;
