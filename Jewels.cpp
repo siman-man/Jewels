@@ -66,6 +66,24 @@ const int CHAIN_PATTERN[1][GRID_SIZE * GRID_SIZE] = {
   }
 };
 
+struct Move {
+  int fromY;
+  int fromX;
+  int toY;
+  int toX;
+
+  Move(int fromY = -1, int fromX = -1, int toY = -1, int toX = -1) {
+    this->fromY = fromY;
+    this->fromX = fromX;
+    this->toY = toY;
+    this->toX = toX;
+  }
+
+  string to_str() {
+    return to_string(fromY) + " " + to_string(fromX) + " " + to_string(toY) + " " + to_string(toX);
+  }
+};
+
 int N;
 int C;
 int g_grid[GRID_SIZE * GRID_SIZE];
@@ -128,7 +146,8 @@ public:
       int c1 = i % N;
       int r2 = 1 + (i % (N - 1));
       int c2 = c1;
-      cout << r1 << " " << c1 << " " << r2 << " " << c2 << endl;
+      Move move(r1, c1, r2, c2);
+      cout << move.to_str() << endl;
       cout.flush();
       readGridData();
       updateGridData();
