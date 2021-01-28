@@ -8,6 +8,7 @@
 #include <string>
 
 using namespace std;
+typedef long long ll;
 
 const int MAX_N = 16;
 const int MAX_C = 10;
@@ -89,10 +90,12 @@ int C;
 int g_grid[GRID_SIZE * GRID_SIZE];
 int g_targetGrid[GRID_SIZE * GRID_SIZE];
 int g_jewelsCounter[MAX_C + 1];
+ll g_removed[GRID_SIZE * GRID_SIZE];
 int g_turn;
+ll g_removeId;
 
 inline int calcZ(int y, int x) {
-  return y * GRID_SIZE + x;
+  return x * GRID_SIZE + y;
 }
 
 class JewelsSolver {
@@ -104,6 +107,7 @@ public:
     fprintf(stderr, "N: %d, C: %d\n", N, C);
 
     g_turn = 0;
+    g_removeId = 0;
     memset(g_grid, X, sizeof(g_grid));
     readGridData();
   }
@@ -131,16 +135,10 @@ public:
         g_jewelsCounter[color]++;
       }
     }
-
-    fprintf(stderr, "%d: (", g_turn);
-    for (int color = 1; color <= C; ++color) {
-      fprintf(stderr, "%2d", g_jewelsCounter[color]);
-      if (color < C) fprintf(stderr, ", ");
-    }
-    fprintf(stderr, ")\n");
   }
 
   void run() {
+    showGrid();
     for (int i = 0; i < MOVE_NUM; i++) {
       int r1 = 0;
       int c1 = i % N;
@@ -155,6 +153,89 @@ public:
       cin >> runtime;
       ++g_turn;
     }
+  }
+
+  int applyMove() {
+    int moveScore = 0;
+    int combo = 0;
+    bool matched = true;
+
+    while (matched) {
+      matched = false;
+      ++g_removeId;
+
+      // check vertical line
+      for (int y = 1; y <= N; ++y) {
+        int match = 0;
+
+        for (int x = 1; x < N; ++x) {
+          int z1 = calcZ(y, x);
+          int z2 = calcZ(y, x + 1);
+
+          if (g_grid[z1] == g_grid[z2]) {
+            ++match;
+          } else {
+            if (match >= 2) {
+              matched = true;
+
+              for (int x2 = x - match; x2 <= x; ++x2) {
+                int z = calcZ(y, x2);
+                g_removed[z] = g_removeId;
+              }
+            }
+
+            match = 0;
+          }
+        }
+
+        if (match >= 2) {
+          matched = true;
+
+          for (int x2 = N - match; x2 <= N; ++x2) {
+            int z = calcZ(y, x2);
+            g_removed[z] = g_removeId;
+          }
+        }
+      }
+
+      // check horizontal line
+      for (int x = 1; x <= N; ++x) {
+        int match = 0;
+
+        for (int y = 1; y < N; ++y) {
+          int z1 = calcZ(y, x);
+          int z2 = calcZ(y + 1, x);
+
+          if (g_grid[z1] == g_grid[z2]) {
+            ++match;
+          } else {
+            matched = true;
+
+            for (int y2 = y - match; y2 <= y; ++y2) {
+              int z = calcZ(y2, x);
+              g_removed[z] = g_removeId;
+            }
+
+            match = 0;
+          }
+        }
+
+        for (int y2 = N - match; y2 <= N; ++y2) {
+          int z = calcZ(y2, x);
+          g_removed[z] = g_removeId;
+        }
+      }
+
+      // fall jewels
+      for (int y = 1; y <= N; ++y) {
+        for (int x = 1; x <= N; ++x) {
+        }
+      }
+
+      if (matched) ++combo;
+    }
+
+    return moveScore * combo;
   }
 
   void selectBestGrid() {
@@ -176,7 +257,7 @@ public:
     memset(g_targetGrid, X, sizeof(g_targetGrid));
 
     for (int y = 1; y <= N; ++y) {
-      for (int x = x; x <= N; ++x) {
+      for (int x = 1; x <= N; ++x) {
         int z = calcZ(y, x);
         g_targetGrid[z] = E;
       }
@@ -196,6 +277,15 @@ public:
   int calcLineScore(int matches) {
     assert(matches >= 3);
     return LINE_SCORE[matches];
+  }
+
+  void showColorCount() {
+    fprintf(stderr, "%d: (", g_turn);
+    for (int color = 1; color <= C; ++color) {
+      fprintf(stderr, "%2d", g_jewelsCounter[color]);
+      if (color < C) fprintf(stderr, ", ");
+    }
+    fprintf(stderr, ")\n");
   }
 
   void showGrid() {
