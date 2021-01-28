@@ -69,6 +69,7 @@ const int CHAIN_PATTERN[1][GRID_SIZE * GRID_SIZE] = {
 int N;
 int C;
 int g_grid[GRID_SIZE * GRID_SIZE];
+int g_targetGrid[GRID_SIZE * GRID_SIZE];
 int g_jewelsCounter[MAX_C + 1];
 int g_turn;
 
@@ -137,7 +138,40 @@ public:
     }
   }
 
-  void setupTargetGrid() {
+  void selectBestGrid() {
+  }
+
+  void mergeGrid() {
+    memset(g_targetGrid, X, sizeof(g_targetGrid));
+    int jewelsCount[N + 1];
+    memset(jewelsCount, 0, sizeof(jewelsCount));
+
+    // merge score grid
+    mergeScoreGrid();
+
+    // merge chain grid
+    mergeChainGrid();
+  }
+
+  void clearTargetGrid() {
+    memset(g_targetGrid, X, sizeof(g_targetGrid));
+
+    for (int y = 1; y <= N; ++y) {
+      for (int x = x; x <= N; ++x) {
+        int z = calcZ(y, x);
+        g_targetGrid[z] = E;
+      }
+    }
+  }
+
+  void mergeScoreGrid() {
+    int id = 0;
+    bool updated = true;
+  }
+
+  void mergeChainGrid() {
+    int id = 0;
+    bool updated = true;
   }
 
   int calcLineScore(int matches) {
