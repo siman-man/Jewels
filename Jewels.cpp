@@ -10,6 +10,7 @@
 using namespace std;
 
 const int MAX_N = 16;
+const int MAX_C = 10;
 const int MOVE_NUM = 1000;
 const int GRID_SIZE = MAX_N + 2;
 const int X = -1;
@@ -67,11 +68,42 @@ const int CHAIN_PATTERN[1][GRID_SIZE * GRID_SIZE] = {
 
 int N;
 int C;
-int grid[GRID_SIZE * GRID_SIZE];
+int g_grid[GRID_SIZE * GRID_SIZE];
+
+inline int calcZ(int y, int x) {
+  return y * GRID_SIZE + x;
+}
 
 class JewelsSolver {
 public:
   void init() {
+    cin >> N;
+    cin >> C;
+
+    fprintf(stderr, "N: %d, C: %d\n", N, C);
+    memset(g_grid, X, sizeof(g_grid));
+    readGridData();
+  }
+
+  void readGridData() {
+    for (int y = 1; y <= N; ++y) {
+      for (int x = 1; x <= N; ++x) {
+        int z = calcZ(y, x);
+        cin >> g_grid[z];
+        if (g_grid[z] > C) {
+          fprintf(stderr, "[%d, %d]: %d\n", y, x, g_grid[z]);
+        }
+        assert(1 <= g_grid[z] && g_grid[z] <= C);
+      }
+    }
+  }
+
+  void updateGridData() {
+    for (int y = 1; y <= N; ++y) {
+      for (int x = 1; x <= N; ++x) {
+        int z = calcZ(y, x);
+      }
+    }
   }
 
   void run() {
@@ -82,27 +114,45 @@ public:
       int c2 = c1;
       cout << r1 << " " << c1 << " " << r2 << " " << c2 << endl;
       cout.flush();
-      for (int j = 0; j < N * N; j++) {
-        cin >> grid[j];
-      }
+      readGridData();
       int runtime;
       cin >> runtime;
     }
+  }
+
+  void setupTargetGrid() {
   }
 
   int calcLineScore(int matches) {
     assert(matches >= 3);
     return LINE_SCORE[matches];
   }
+
+  void showGrid() {
+    for (int y = N + 1; y >= 0; --y) {
+      for (int x = 0; x <= N + 1; ++x) {
+        int z = calcZ(y, x);
+
+        if (g_grid[z] == X) {
+          fprintf(stderr, "X");
+        } else {
+          assert(0 <= g_grid[z]);
+          if (g_grid[z] > C) {
+            fprintf(stderr, "error: %d, [%d, %d]\n", g_grid[z], y, x);
+          }
+          assert(g_grid[z] <= C);
+          fprintf(stderr, "%d", g_grid[z]);
+        }
+      }
+      fprintf(stderr, "\n");
+    }
+
+    fprintf(stderr, "\n");
+  }
 };
 
 int main() {
-  cin >> N;
-  cin >> C;
-  for (int i = 0; i < N * N; i++) {
-    cin >> grid[i];
-  }
-
   JewelsSolver solver;
+  solver.init();
   solver.run();
 }
