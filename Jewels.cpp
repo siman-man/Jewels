@@ -185,6 +185,7 @@ public:
   void run() {
     buildMappingGrid();
     buildTargetGrid();
+    buildMoves();
     showMappingGrid();
     showGrid();
     Move move;
@@ -391,6 +392,71 @@ public:
 
     memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
     showTargetGrid();
+  }
+
+  void buildMoves() {
+    memcpy(g_copyGrid, g_grid, sizeof(g_grid));
+    vector <Move> moves;
+    queue<int> needExchangePositions;
+
+    for (int y = 1; y <= N; ++y) {
+      for (int x = 1; x <= N; ++x) {
+        int z = calcZ(y, x);
+        if (g_targetGrid[z] == E) continue;
+        if (g_targetGrid[z] == g_grid[z]) continue;
+
+        needExchangePositions.push(z);
+      }
+    }
+
+    while (!needExchangePositions.empty()) {
+      int z = needExchangePositions.front();
+      int x = z / GRID_SIZE;
+      int y = z % GRID_SIZE;
+      needExchangePositions.pop();
+
+      Move move = findExchangeMove(g_targetGrid[z], y, x);
+      if (move.fromY == -1) {
+        if (needExchangePositions.empty()) {
+          memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
+          return;
+        } else {
+          needExchangePositions.push(z);
+        }
+      } else {
+        moves.push_back(move);
+      }
+    }
+
+    for (int i = 0; i < moves.size(); ++i) {
+      Move move = moves[i];
+      g_moveQueue.push(move);
+    }
+
+    g_moveQueue.push(Move(1, 1, 1, N));
+    memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
+  }
+
+  Move findExchangeMove(int targetColor, int fromY, int fromX) {
+    int fromZ = calcZ(fromY, fromX);
+
+    for (int x = 1; x <= N; ++x) {
+      for (int y = N; y >= 1; --y) {
+        int z = calcZ(y, x);
+        if (g_targetGrid[z] == g_grid[z]) continue;
+        if (g_grid[z] != targetColor) continue;
+
+        swap(g_grid[fromZ], g_grid[z]);
+
+        if (!isFire(fromZ) && !isFire(z)) {
+          return Move(fromY, fromX, y, x);
+        }
+
+        swap(g_grid[fromZ], g_grid[z]);
+      }
+    }
+
+    return Move();
   }
 
   bool mappingJewelsToTargetGrid() {
