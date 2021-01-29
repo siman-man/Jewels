@@ -12,6 +12,15 @@
 using namespace std;
 typedef long long ll;
 
+unsigned long long xor128() {
+  static unsigned long long rx = 123456789, ry = 362436069, rz = 521288629, rw = 88675123;
+  unsigned long long rt = (rx ^ (rx << 11));
+  rx = ry;
+  ry = rz;
+  rz = rw;
+  return (rw = (rw ^ (rw >> 19)) ^ (rt ^ (rt >> 8)));
+}
+
 const int MAX_N = 16;
 const int MAX_C = 10;
 const int MOVE_NUM = 1000;
@@ -133,6 +142,7 @@ int g_mappingGrid[GRID_SIZE * GRID_SIZE];
 int g_targetGrid[GRID_SIZE * GRID_SIZE];
 int g_jewelsCounter[MAX_C + 1];
 int g_jewelsMapping[GRID_SIZE * GRID_SIZE];
+int g_mappingCount[GRID_SIZE * GRID_SIZE];
 int g_chunkCounter[GRID_SIZE * GRID_SIZE];
 int g_lineHeight[GRID_SIZE];
 ll g_removed[GRID_SIZE * GRID_SIZE];
@@ -192,6 +202,12 @@ public:
 
     for (int i = 0; i < MOVE_NUM; i++) {
       // fprintf(stderr, "turn %d: \n", g_turn);
+
+      if (i % 50 == 0) {
+        buildMappingGrid();
+        buildTargetGrid();
+        buildMoves();
+      }
 
       if (g_moveQueue.empty()) {
         move = selectBestMove();
@@ -266,7 +282,7 @@ public:
     bool matched = true;
     swap(g_grid[move.fromZ], g_grid[move.toZ]);
 
-    if (skipFireCheck && !isFire(move.fromZ) && !isFire(move.toZ)) {
+    if (!skipFireCheck && !isFire(move.fromZ) && !isFire(move.toZ)) {
       return 0;
     }
 
@@ -388,6 +404,14 @@ public:
 
     Move move(1, 1, 1, 1);
     int score = applyMove(move, true);
+
+    while (score != 0) {
+      shuffleMapping();
+      mappingToTargetGrid();
+      memcpy(g_grid, g_targetGrid, sizeof(g_targetGrid));
+      score = applyMove(move, true);
+    }
+
     assert(score == 0);
 
     memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
@@ -395,6 +419,7 @@ public:
   }
 
   void buildMoves() {
+    fprintf(stderr, "buildMoves =>\n");
     memcpy(g_copyGrid, g_grid, sizeof(g_grid));
     vector <Move> moves;
     queue<int> needExchangePositions;
@@ -502,6 +527,7 @@ public:
           if (jewel.cnt < chunk.cnt) continue;
 
           g_jewelsMapping[chunk.id] = jewel.color;
+          g_mappingCount[chunk.id] = chunk.cnt;
           jewel.cnt -= chunk.cnt;
           jewelPQue.push(jewel);
 
@@ -516,6 +542,31 @@ public:
       }
     }
 
+    mappingToTargetGrid();
+
+    return true;
+  }
+
+  bool shuffleMapping() {
+    int limit = 100;
+
+    while (limit > 0) {
+      --limit;
+
+      int i = xor128() % g_mappingId;
+      int j = xor128() % g_mappingId;
+
+      if (g_mappingCount[i] != g_mappingCount[j]) continue;
+      if (g_jewelsMapping[i] == g_jewelsMapping[j]) continue;
+
+      swap(g_jewelsMapping[i], g_jewelsMapping[j]);
+      return true;
+    }
+
+    return false;
+  }
+
+  void mappingToTargetGrid() {
     for (int x = 1; x <= N; ++x) {
       for (int y = 1; y <= N; ++y) {
         int z = calcZ(y, x);
@@ -524,8 +575,6 @@ public:
         g_targetGrid[z] = g_jewelsMapping[mid];
       }
     }
-
-    return true;
   }
 
   void clearTargetGrid() {
@@ -572,6 +621,7 @@ public:
 
   void mergeChainGrid() {
     int gid = N - 8;
+    int baseId = g_mappingId;
 
     for (int x = 1; x <= N; ++x) {
       for (int y = 1; y <= N; ++y) {
@@ -581,7 +631,8 @@ public:
 
         int height = g_lineHeight[x] + 1;
         int tz = calcZ(height, x);
-        g_mappingGrid[tz] = g_mappingId + id;
+        g_mappingId = max(g_mappingId, baseId + id);
+        g_mappingGrid[tz] = baseId + id;
         ++g_lineHeight[x];
       }
     }
