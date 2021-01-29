@@ -537,12 +537,23 @@ public:
   void run() {
     Move move;
     int remain = 9999;
+    int extLine = 2;
 
     for (int i = 0; i < MOVE_NUM; i++) {
       // fprintf(stderr, "turn %d: \n", g_turn);
 
       if (g_moveQueue.empty()) {
-        int extLine = 3;
+        if (N >= 14) {
+          extLine = 6;
+        } else if (N >= 12) {
+          extLine = 5;
+        } else if (N >= 10) {
+          extLine = 4;
+        } else if (N >= 9) {
+          extLine = 3;
+        } else {
+          extLine = 2;
+        }
 
         while (g_moveQueue.empty() && extLine >= 0) {
           buildMappingGrid(extLine);
