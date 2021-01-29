@@ -540,7 +540,7 @@ public:
       // fprintf(stderr, "turn %d: \n", g_turn);
 
       if (g_moveQueue.empty()) {
-        int extLine = 1;
+        int extLine = 3;
 
         while (g_moveQueue.empty() && extLine >= 0) {
           buildMappingGrid(extLine);
@@ -764,10 +764,10 @@ public:
       --limit;
     }
 
-    if (limit <= 0) return false;
-    assert(score == 0);
-
     memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
+    if (limit <= 0) return false;
+
+    assert(score == 0);
     // showTargetGrid();
 
     return true;
