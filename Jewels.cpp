@@ -820,6 +820,7 @@ public:
       int x = z / GRID_SIZE;
       int y = z % GRID_SIZE;
       needExchangePositions.pop();
+      if (g_grid[z] == g_targetGrid[z]) continue;
 
       Move move = findExchangeMove(g_targetGrid[z], y, x);
       if (move.fromY == -1) {
