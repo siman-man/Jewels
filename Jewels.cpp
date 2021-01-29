@@ -211,6 +211,8 @@ const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // [FIXME] N = 16
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 0, 1, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
@@ -225,8 +227,6 @@ const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
     X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
   },
 };
@@ -865,7 +865,7 @@ public:
       } else if (N == 15) {
         g_moveQueue.push(Move(1, 5, 1, 11));
       } else if (N == 16) {
-        g_moveQueue.push(Move(1, 3, 1, 10));
+        g_moveQueue.push(Move(1, 5, 1, 12));
       }
     }
 
@@ -1069,7 +1069,7 @@ public:
     }
 
     for (int i = 0; i < extLine; ++i) {
-      int id = g_mappingId + 1;
+      int id = g_mappingId;
 
       for (int x = 1; x <= N; ++x) {
         int height = g_lineHeight[x] + 1;
