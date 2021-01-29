@@ -101,8 +101,10 @@ int g_grid[GRID_SIZE * GRID_SIZE];
 int g_copyGrid[GRID_SIZE * GRID_SIZE];
 int g_targetGrid[GRID_SIZE * GRID_SIZE];
 int g_jewelsCounter[MAX_C + 1];
+int g_lineHeight[GRID_SIZE];
 ll g_removed[GRID_SIZE * GRID_SIZE];
 int g_turn;
+int g_jewelsId;
 ll g_removeId;
 
 class JewelsSolver {
@@ -145,7 +147,8 @@ public:
   }
 
   void run() {
-    showGrid();
+    buildTargetGrid();
+    showTargetGrid();
 
     for (int i = 0; i < MOVE_NUM; i++) {
       // fprintf(stderr, "turn %d: \n", g_turn);
@@ -212,13 +215,13 @@ public:
     return false;
   }
 
-  int applyMove(Move &move) {
+  int applyMove(Move &move, bool skipFireCheck = false) {
     int moveScore = 0;
     int combo = 0;
     bool matched = true;
     swap(g_grid[move.fromZ], g_grid[move.toZ]);
 
-    if (!isFire(move.fromZ) && !isFire(move.toZ)) {
+    if (skipFireCheck && !isFire(move.fromZ) && !isFire(move.toZ)) {
       return 0;
     }
 
@@ -325,20 +328,25 @@ public:
   void selectBestGrid() {
   }
 
-  void mergeGrid() {
-    memset(g_targetGrid, X, sizeof(g_targetGrid));
-    int jewelsCount[N + 1];
-    memset(jewelsCount, 0, sizeof(jewelsCount));
-
-    // merge score grid
+  void buildTargetGrid() {
+    clearTargetGrid();
     mergeScoreGrid();
-
-    // merge chain grid
     mergeChainGrid();
+
+    memcpy(g_copyGrid, g_grid, sizeof(g_grid));
+    memcpy(g_grid, g_targetGrid, sizeof(g_targetGrid));
+
+    Move move(1, 1, 1, 1);
+    int score = applyMove(move, true);
+    assert(score == 0);
+
+    memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
   }
 
   void clearTargetGrid() {
     memset(g_targetGrid, X, sizeof(g_targetGrid));
+    memset(g_lineHeight, 0, sizeof(g_lineHeight));
+    g_jewelsId = 0;
 
     for (int y = 1; y <= N; ++y) {
       for (int x = 1; x <= N; ++x) {
@@ -349,13 +357,38 @@ public:
   }
 
   void mergeScoreGrid() {
-    int id = 0;
-    bool updated = true;
+    int gid = N - 8;
+
+    for (int x = 1; x <= N; ++x) {
+      for (int y = 1; y <= N; ++y) {
+        int z = calcZ(y, x);
+        int id = BASE_SCORE_PATTERN[gid][z];
+        if (id == E) continue;
+
+        g_jewelsId = max(g_jewelsId, id + 1);
+        int height = g_lineHeight[x] + 1;
+        int tz = calcZ(height, x);
+        g_targetGrid[tz] = id;
+        ++g_lineHeight[x];
+      }
+    }
   }
 
   void mergeChainGrid() {
-    int id = 0;
-    bool updated = true;
+    int gid = N - 8;
+
+    for (int x = 1; x <= N; ++x) {
+      for (int y = 1; y <= N; ++y) {
+        int z = calcZ(y, x);
+        int id = CHAIN_PATTERN[gid][z];
+        if (id == E) continue;
+
+        int height = g_lineHeight[x] + 1;
+        int tz = calcZ(height, x);
+        g_targetGrid[tz] = g_jewelsId + id;
+        ++g_lineHeight[x];
+      }
+    }
   }
 
   int calcLineScore(int matches) {
@@ -370,6 +403,25 @@ public:
       if (color < C) fprintf(stderr, ", ");
     }
     fprintf(stderr, ")\n");
+  }
+
+  void showTargetGrid() {
+    for (int y = N + 1; y >= 0; --y) {
+      for (int x = 0; x <= N + 1; ++x) {
+        int z = calcZ(y, x);
+
+        if (g_targetGrid[z] == X) {
+          fprintf(stderr, "X");
+        } else if (g_targetGrid[z] == E) {
+          fprintf(stderr, " ");
+        } else {
+          fprintf(stderr, "%d", g_targetGrid[z]);
+        }
+      }
+      fprintf(stderr, "\n");
+    }
+
+    fprintf(stderr, "\n");
   }
 
   void showGrid() {
