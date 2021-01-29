@@ -38,7 +38,8 @@ const int LINE_SCORE[MAX_N + 1] = {
   0, 0, 0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196
 };
 
-const int BASE_SCORE_PATTERN[1][GRID_SIZE * GRID_SIZE] = {
+const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
+  // N = 8
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, 0, 1, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
@@ -58,10 +59,179 @@ const int BASE_SCORE_PATTERN[1][GRID_SIZE * GRID_SIZE] = {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
-  }
+  },
+  // N = 9
+  {
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 0, 1, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 0, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+  },
+  // N = 10
+  {
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 0, 1, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 0, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+  },
+  // N = 11
+  {
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 0, 1, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 0, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+  },
+  // N = 12
+  {
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 0, 1, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 0, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+  },
+  // N = 13
+  {
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 0, 1, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 0, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+  },
+  // N = 14
+  {
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 0, 1, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 0, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+  },
+  // N = 15
+  {
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 0, 1, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 0, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+  },
+  // N = 16
+  {
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 0, 1, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 0, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+  },
 };
 
-const int CHAIN_PATTERN[1][GRID_SIZE * GRID_SIZE] = {
+const int CHAIN_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
+  // N = 8
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
@@ -81,7 +251,175 @@ const int CHAIN_PATTERN[1][GRID_SIZE * GRID_SIZE] = {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
-  }
+  },
+  // N = 9
+  {
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 3, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 3, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+  },
+  // N = 10
+  {
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 3, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 3, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+  },
+  // N = 11
+  {
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 3, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 3, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+  },
+  // N = 12
+  {
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 3, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 3, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+  },
+  // N = 13
+  {
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 3, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 3, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+  },
+  // N = 14
+  {
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 3, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 3, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+  },
+  // N = 15
+  {
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 3, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 3, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+  },
+  // N = 16
+  {
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 3, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 3, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+  },
 };
 
 struct Chunk {
@@ -194,11 +532,6 @@ public:
   }
 
   void run() {
-    buildMappingGrid();
-    buildTargetGrid();
-    buildMoves();
-    showMappingGrid();
-    showGrid();
     Move move;
 
     for (int i = 0; i < MOVE_NUM; i++) {
@@ -206,8 +539,9 @@ public:
 
       if (g_moveQueue.empty()) {
         buildMappingGrid();
-        buildTargetGrid();
-        buildMoves();
+        if (buildTargetGrid()) {
+          buildMoves();
+        }
       }
 
       if (g_moveQueue.empty()) {
@@ -396,7 +730,7 @@ public:
     mergeChainGrid();
   }
 
-  void buildTargetGrid() {
+  bool buildTargetGrid() {
     memcpy(g_copyGrid, g_grid, sizeof(g_grid));
 
     clearTargetGrid();
@@ -406,18 +740,23 @@ public:
     Move move(1, 1, 1, 1);
     int score = applyMove(move, true);
     showTargetGrid();
+    int limit = 100;
 
-    while (score != 0) {
+    while (score != 0 && limit > 0) {
       shuffleMapping();
       mappingToTargetGrid();
       memcpy(g_grid, g_targetGrid, sizeof(g_targetGrid));
       score = applyMove(move, true);
+      --limit;
     }
 
+    if (limit <= 0) return false;
     assert(score == 0);
 
     memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
     showTargetGrid();
+
+    return true;
   }
 
   void buildMoves() {
@@ -436,7 +775,9 @@ public:
       }
     }
 
-    while (!needExchangePositions.empty()) {
+    int limit = 1000;
+
+    while (!needExchangePositions.empty() && limit > 0) {
       int z = needExchangePositions.front();
       int x = z / GRID_SIZE;
       int y = z % GRID_SIZE;
@@ -453,7 +794,11 @@ public:
       } else {
         moves.push_back(move);
       }
+
+      --limit;
     }
+
+    if (limit <= 0) return;
 
     for (int i = 0; i < moves.size(); ++i) {
       Move move = moves[i];
@@ -461,7 +806,7 @@ public:
     }
 
     if (g_moveQueue.size() > 0) {
-      g_moveQueue.push(Move(1, 1, 1, N));
+      g_moveQueue.push(Move(1, 1, 1, 8));
     }
 
     memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
