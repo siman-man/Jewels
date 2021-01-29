@@ -540,9 +540,16 @@ public:
       // fprintf(stderr, "turn %d: \n", g_turn);
 
       if (g_moveQueue.empty()) {
-        buildMappingGrid();
-        if (buildTargetGrid()) {
-          buildMoves();
+        int extLine = 1;
+
+        while (g_moveQueue.empty() && extLine >= 0) {
+          buildMappingGrid(extLine);
+
+          if (buildTargetGrid()) {
+            buildMoves();
+          }
+
+          --extLine;
         }
       }
 
@@ -731,9 +738,9 @@ public:
   void selectBestGrid() {
   }
 
-  void buildMappingGrid() {
+  void buildMappingGrid(int extLine) {
     clearMappingGrid();
-    mergeScoreGrid();
+    mergeScoreGrid(extLine);
     mergeChainGrid();
   }
 
@@ -990,7 +997,7 @@ public:
     }
   }
 
-  void mergeScoreGrid() {
+  void mergeScoreGrid(int extLine) {
     int gid = N - 8;
 
     for (int x = 1; x <= N; ++x) {
@@ -1005,6 +1012,20 @@ public:
         g_mappingGrid[tz] = id;
         ++g_lineHeight[x];
       }
+    }
+
+    for (int i = 0; i < extLine; ++i) {
+      int id = g_mappingId + 1;
+
+      for (int x = 1; x <= N; ++x) {
+        int height = g_lineHeight[x] + 1;
+        assert(height <= N);
+        int tz = calcZ(height, x);
+        g_mappingGrid[tz] = id;
+        ++g_lineHeight[x];
+      }
+
+      ++g_mappingId;
     }
   }
 
