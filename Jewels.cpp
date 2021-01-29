@@ -564,6 +564,11 @@ public:
             buildMoves();
           }
 
+          if (g_moveQueue.size() + g_turn >= 1000) {
+            while (!g_moveQueue.empty()) {
+              g_moveQueue.pop();
+            }
+          }
           --extLine;
         }
 
@@ -580,6 +585,12 @@ public:
           move = selectBestMove();
         }
       } else {
+        if (g_turn == 999) {
+          while (g_moveQueue.size() > 1) {
+            g_moveQueue.pop();
+          }
+        }
+
         do {
           move = g_moveQueue.front();
           g_moveQueue.pop();
