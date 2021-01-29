@@ -476,6 +476,7 @@ struct Move {
 int N;
 int C;
 int g_grid[GRID_SIZE * GRID_SIZE];
+int g_originGrid[GRID_SIZE * GRID_SIZE];
 int g_copyGrid[GRID_SIZE * GRID_SIZE];
 int g_mappingGrid[GRID_SIZE * GRID_SIZE];
 int g_targetGrid[GRID_SIZE * GRID_SIZE];
@@ -540,6 +541,7 @@ public:
     int extLine = 2;
 
     for (int i = 0; i < MOVE_NUM; i++) {
+      memcpy(g_originGrid, g_grid, sizeof(g_grid));
       // fprintf(stderr, "turn %d: \n", g_turn);
 
       if (g_moveQueue.empty()) {
@@ -578,10 +580,13 @@ public:
           move = selectBestMove();
         }
       } else {
-        move = g_moveQueue.front();
-        g_moveQueue.pop();
+        do {
+          move = g_moveQueue.front();
+          g_moveQueue.pop();
+        } while (g_moveQueue.size() > 0 && g_originGrid[move.fromZ] == g_originGrid[move.toZ]);
       }
       // Move move(r1, c1, r2, c2);
+      // assert(g_originGrid[move.fromZ] != g_originGrid[move.toZ]);
       cout << move.to_str() << endl;
       cout.flush();
       readGridData();
@@ -808,6 +813,7 @@ public:
     }
 
     int limit = 1000;
+    memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
 
     while (!needExchangePositions.empty() && limit > 0) {
       int z = needExchangePositions.front();
@@ -856,6 +862,24 @@ public:
 
   Move findExchangeMove(int targetColor, int fromY, int fromX) {
     int fromZ = calcZ(fromY, fromX);
+    int fromColor = g_grid[fromZ];
+
+    for (int x = 1; x <= N; ++x) {
+      for (int y = 1; y <= N; ++y) {
+        int z = calcZ(y, x);
+        if (g_targetGrid[z] == g_grid[z]) continue;
+        if (g_grid[z] != targetColor) continue;
+        if (g_targetGrid[z] != fromColor) continue;
+
+        swap(g_grid[fromZ], g_grid[z]);
+
+        if (!isFire(fromZ) && !isFire(z)) {
+          return Move(fromY, fromX, y, x);
+        }
+
+        swap(g_grid[fromZ], g_grid[z]);
+      }
+    }
 
     for (int x = 1; x <= N; ++x) {
       for (int y = N; y >= 1; --y) {
