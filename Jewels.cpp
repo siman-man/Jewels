@@ -39,6 +39,10 @@ const int LINE_SCORE[MAX_N + 1] = {
   0, 0, 0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196
 };
 
+const int EXT_LINE[MAX_N + 1] = {
+  0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4, 4, 5, 5, 5, 6, 9
+};
+
 const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // N = 8
   {
@@ -545,17 +549,7 @@ public:
       // fprintf(stderr, "turn %d: \n", g_turn);
 
       if (g_moveQueue.empty()) {
-        if (N >= 14) {
-          extLine = 5;
-        } else if (N >= 12) {
-          extLine = 5;
-        } else if (N >= 10) {
-          extLine = 4;
-        } else if (N >= 9) {
-          extLine = 3;
-        } else {
-          extLine = 2;
-        }
+        extLine = EXT_LINE[N];
 
         while (g_moveQueue.empty() && extLine >= 0) {
           buildMappingGrid(extLine);
