@@ -187,10 +187,9 @@ const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
   },
-  // N = 15
+  // [FIXME] N = 15
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
-    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 0, 1, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
@@ -205,14 +204,13 @@ const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
     X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
   },
-  // N = 16
+  // [FIXME] N = 16
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
-    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 0, 1, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
@@ -227,6 +225,8 @@ const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
     X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
   },
 };
@@ -546,7 +546,7 @@ public:
 
       if (g_moveQueue.empty()) {
         if (N >= 14) {
-          extLine = 6;
+          extLine = 5;
         } else if (N >= 12) {
           extLine = 5;
         } else if (N >= 10) {
@@ -852,9 +852,9 @@ public:
       } else if (N == 14) {
         g_moveQueue.push(Move(1, 3, 1, 10));
       } else if (N == 15) {
-        g_moveQueue.push(Move(1, 4, 1, 11));
+        g_moveQueue.push(Move(1, 3, 1, 10));
       } else if (N == 16) {
-        g_moveQueue.push(Move(1, 5, 1, 12));
+        g_moveQueue.push(Move(1, 3, 1, 10));
       }
     }
 
