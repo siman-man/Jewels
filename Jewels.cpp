@@ -139,6 +139,7 @@ ll g_removed[GRID_SIZE * GRID_SIZE];
 int g_turn;
 int g_mappingId;
 ll g_removeId;
+queue <Move> g_moveQueue;
 
 class JewelsSolver {
 public:
@@ -185,10 +186,18 @@ public:
     buildMappingGrid();
     buildTargetGrid();
     showMappingGrid();
+    showGrid();
+    Move move;
 
     for (int i = 0; i < MOVE_NUM; i++) {
       // fprintf(stderr, "turn %d: \n", g_turn);
-      Move move = selectBestMove();
+
+      if (g_moveQueue.empty()) {
+        move = selectBestMove();
+      } else {
+        move = g_moveQueue.front();
+        g_moveQueue.pop();
+      }
       // Move move(r1, c1, r2, c2);
       cout << move.to_str() << endl;
       cout.flush();
