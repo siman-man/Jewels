@@ -141,6 +141,7 @@ int g_copyGrid[GRID_SIZE * GRID_SIZE];
 int g_mappingGrid[GRID_SIZE * GRID_SIZE];
 int g_targetGrid[GRID_SIZE * GRID_SIZE];
 int g_jewelsCounter[MAX_C + 1];
+int g_remainJewelsCounter[MAX_C + 1];
 int g_jewelsMapping[GRID_SIZE * GRID_SIZE];
 int g_mappingCount[GRID_SIZE * GRID_SIZE];
 int g_chunkCounter[GRID_SIZE * GRID_SIZE];
@@ -203,7 +204,7 @@ public:
     for (int i = 0; i < MOVE_NUM; i++) {
       // fprintf(stderr, "turn %d: \n", g_turn);
 
-      if (i % 50 == 0) {
+      if (g_moveQueue.empty()) {
         buildMappingGrid();
         buildTargetGrid();
         buildMoves();
@@ -404,6 +405,7 @@ public:
 
     Move move(1, 1, 1, 1);
     int score = applyMove(move, true);
+    showTargetGrid();
 
     while (score != 0) {
       shuffleMapping();
@@ -458,7 +460,10 @@ public:
       g_moveQueue.push(move);
     }
 
-    g_moveQueue.push(Move(1, 1, 1, N));
+    if (g_moveQueue.size() > 0) {
+      g_moveQueue.push(Move(1, 1, 1, N));
+    }
+
     memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
   }
 
@@ -486,6 +491,8 @@ public:
 
   bool mappingJewelsToTargetGrid() {
     fprintf(stderr, "mappingJewelsToTargetGrid =>\n");
+    memset(g_jewelsMapping, -1, sizeof(g_jewelsMapping));
+    memcpy(g_remainJewelsCounter, g_jewelsCounter, sizeof(g_jewelsCounter));
     int maxMappingId = -1;
 
     memset(g_chunkCounter, 0, sizeof(g_chunkCounter));
@@ -528,10 +535,20 @@ public:
 
           g_jewelsMapping[chunk.id] = jewel.color;
           g_mappingCount[chunk.id] = chunk.cnt;
-          jewel.cnt -= chunk.cnt;
-          jewelPQue.push(jewel);
 
-          break;
+          mappingToTargetGrid();
+          memcpy(g_grid, g_targetGrid, sizeof(g_targetGrid));
+          Move move(1, 1, 1, 1);
+          int score = applyMove(move, true);
+
+          if (score == 0) {
+            g_remainJewelsCounter[jewel.color] -= chunk.cnt;
+            jewel.cnt -= chunk.cnt;
+            jewelPQue.push(jewel);
+            break;
+          } else {
+            stack.push(jewel);
+          }
         }
 
         while (!stack.empty()) {
@@ -555,10 +572,16 @@ public:
 
       int i = xor128() % g_mappingId;
       int j = xor128() % g_mappingId;
+      int color1 = g_jewelsMapping[i];
+      int color2 = xor128() % C + 1;
+      if (color1 == color2) continue;
 
-      if (g_mappingCount[i] != g_mappingCount[j]) continue;
-      if (g_jewelsMapping[i] == g_jewelsMapping[j]) continue;
+      int cnt1 = g_remainJewelsCounter[i] + (g_mappingCount[i] - g_mappingCount[j]);
+      int cnt2 = g_remainJewelsCounter[j] + (g_mappingCount[j] - g_mappingCount[i]);
+      if (cnt1 < 0 || cnt2 < 0) continue;
 
+      g_remainJewelsCounter[i] = cnt1;
+      g_remainJewelsCounter[j] = cnt2;
       swap(g_jewelsMapping[i], g_jewelsMapping[j]);
       return true;
     }
@@ -567,11 +590,15 @@ public:
   }
 
   void mappingToTargetGrid() {
+    // fprintf(stderr, "mappingToTargetGrid =>\n");
+
     for (int x = 1; x <= N; ++x) {
       for (int y = 1; y <= N; ++y) {
         int z = calcZ(y, x);
         int mid = g_mappingGrid[z];
         if (mid == E) continue;
+        if (g_jewelsMapping[mid] == -1) continue;
+
         g_targetGrid[z] = g_jewelsMapping[mid];
       }
     }
