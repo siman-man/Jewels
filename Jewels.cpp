@@ -487,6 +487,7 @@ int g_chunkCounter[GRID_SIZE * GRID_SIZE];
 int g_lineHeight[GRID_SIZE];
 ll g_removed[GRID_SIZE * GRID_SIZE];
 int g_turn;
+int g_buildTargetGridCnt;
 int g_mappingId;
 ll g_removeId;
 queue <Move> g_moveQueue;
@@ -501,6 +502,7 @@ public:
 
     g_turn = 0;
     g_removeId = 0;
+    g_buildTargetGridCnt = 0;
     memset(g_grid, X, sizeof(g_grid));
     readGridData();
   }
@@ -550,6 +552,11 @@ public:
           }
 
           --extLine;
+        }
+
+        if (g_moveQueue.size() > 0) {
+          fprintf(stderr, "Que size: %d\n", (int) g_moveQueue.size());
+          ++g_buildTargetGridCnt;
         }
       }
 
@@ -859,7 +866,7 @@ public:
   }
 
   bool mappingJewelsToTargetGrid() {
-    fprintf(stderr, "mappingJewelsToTargetGrid =>\n");
+    fprintf(stderr, "%d: mappingJewelsToTargetGrid =>\n", g_buildTargetGridCnt);
     memset(g_jewelsMapping, -1, sizeof(g_jewelsMapping));
     memcpy(g_remainJewelsCounter, g_jewelsCounter, sizeof(g_jewelsCounter));
     int maxMappingId = -1;
