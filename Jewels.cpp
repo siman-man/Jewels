@@ -4,6 +4,7 @@
 #include <map>
 #include <sstream>
 #include <vector>
+#include <queue>
 #include <set>
 #include <string>
 
@@ -73,6 +74,34 @@ const int CHAIN_PATTERN[1][GRID_SIZE * GRID_SIZE] = {
   }
 };
 
+struct Chunk {
+  int id;
+  int cnt;
+
+  Chunk(int id = -1, int cnt = -1) {
+    this->id = id;
+    this->cnt = cnt;
+  }
+
+  bool operator>(const Chunk &n) const {
+    return cnt < n.cnt;
+  }
+};
+
+struct Jewel {
+  int color;
+  int cnt;
+
+  Jewel(int color = -1, int cnt = -1) {
+    this->color = color;
+    this->cnt = cnt;
+  }
+
+  bool operator>(const Jewel &n) const {
+    return cnt < n.cnt;
+  }
+};
+
 struct Move {
   int fromY;
   int fromX;
@@ -99,12 +128,15 @@ int N;
 int C;
 int g_grid[GRID_SIZE * GRID_SIZE];
 int g_copyGrid[GRID_SIZE * GRID_SIZE];
+int g_mappingGrid[GRID_SIZE * GRID_SIZE];
 int g_targetGrid[GRID_SIZE * GRID_SIZE];
 int g_jewelsCounter[MAX_C + 1];
+int g_jewelsMapping[GRID_SIZE * GRID_SIZE];
+int g_chunkCounter[GRID_SIZE * GRID_SIZE];
 int g_lineHeight[GRID_SIZE];
 ll g_removed[GRID_SIZE * GRID_SIZE];
 int g_turn;
-int g_jewelsId;
+int g_mappingId;
 ll g_removeId;
 
 class JewelsSolver {
@@ -147,8 +179,8 @@ public:
   }
 
   void run() {
-    buildTargetGrid();
-    showTargetGrid();
+    buildMappingGrid();
+    showMappingGrid();
 
     for (int i = 0; i < MOVE_NUM; i++) {
       // fprintf(stderr, "turn %d: \n", g_turn);
@@ -328,13 +360,13 @@ public:
   void selectBestGrid() {
   }
 
-  void buildTargetGrid() {
-    clearTargetGrid();
+  void buildMappingGrid() {
+    clearMappingGrid();
     mergeScoreGrid();
     mergeChainGrid();
 
     memcpy(g_copyGrid, g_grid, sizeof(g_grid));
-    memcpy(g_grid, g_targetGrid, sizeof(g_targetGrid));
+    memcpy(g_grid, g_mappingGrid, sizeof(g_mappingGrid));
 
     Move move(1, 1, 1, 1);
     int score = applyMove(move, true);
@@ -343,15 +375,36 @@ public:
     memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
   }
 
-  void clearTargetGrid() {
-    memset(g_targetGrid, X, sizeof(g_targetGrid));
+  void mappingJewelsToTargetGrid() {
+    fprintf(stderr, "mappingJewelsToTargetGrid =>\n");
+
+    memset(g_chunkCounter, 0, sizeof(g_chunkCounter));
+    for (int x = 1; x <= N; ++x) {
+      for (int y = 1; y <= N; ++y) {
+        int z = calcZ(y, x);
+        int mid = g_mappingGrid[z];
+        if (mid == E) continue;
+
+        ++g_chunkCounter[mid];
+      }
+    }
+
+    priority_queue <Jewel, vector<Jewel>, greater<Jewel>> pque;
+
+    for (int color = 1; color <= C; ++color) {
+      pque.push(Jewel(color, g_jewelsCounter[color]));
+    }
+  }
+
+  void clearMappingGrid() {
+    memset(g_mappingGrid, X, sizeof(g_mappingGrid));
     memset(g_lineHeight, 0, sizeof(g_lineHeight));
-    g_jewelsId = 0;
+    g_mappingId = 0;
 
     for (int y = 1; y <= N; ++y) {
       for (int x = 1; x <= N; ++x) {
         int z = calcZ(y, x);
-        g_targetGrid[z] = E;
+        g_mappingGrid[z] = E;
       }
     }
   }
@@ -365,10 +418,10 @@ public:
         int id = BASE_SCORE_PATTERN[gid][z];
         if (id == E) continue;
 
-        g_jewelsId = max(g_jewelsId, id + 1);
+        g_mappingId = max(g_mappingId, id + 1);
         int height = g_lineHeight[x] + 1;
         int tz = calcZ(height, x);
-        g_targetGrid[tz] = id;
+        g_mappingGrid[tz] = id;
         ++g_lineHeight[x];
       }
     }
@@ -385,7 +438,7 @@ public:
 
         int height = g_lineHeight[x] + 1;
         int tz = calcZ(height, x);
-        g_targetGrid[tz] = g_jewelsId + id;
+        g_mappingGrid[tz] = g_mappingId + id;
         ++g_lineHeight[x];
       }
     }
@@ -403,6 +456,25 @@ public:
       if (color < C) fprintf(stderr, ", ");
     }
     fprintf(stderr, ")\n");
+  }
+
+  void showMappingGrid() {
+    for (int y = N + 1; y >= 0; --y) {
+      for (int x = 0; x <= N + 1; ++x) {
+        int z = calcZ(y, x);
+
+        if (g_mappingGrid[z] == X) {
+          fprintf(stderr, "X");
+        } else if (g_mappingGrid[z] == E) {
+          fprintf(stderr, " ");
+        } else {
+          fprintf(stderr, "%c", 'A' + g_mappingGrid[z]);
+        }
+      }
+      fprintf(stderr, "\n");
+    }
+
+    fprintf(stderr, "\n");
   }
 
   void showTargetGrid() {
