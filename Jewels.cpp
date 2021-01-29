@@ -7,6 +7,7 @@
 #include <queue>
 #include <set>
 #include <string>
+#include <stack>
 
 using namespace std;
 typedef long long ll;
@@ -164,6 +165,8 @@ public:
         assert(1 <= g_grid[z] && g_grid[z] <= C);
       }
     }
+
+    updateGridData();
   }
 
   void updateGridData() {
@@ -180,6 +183,7 @@ public:
 
   void run() {
     buildMappingGrid();
+    buildTargetGrid();
     showMappingGrid();
 
     for (int i = 0; i < MOVE_NUM; i++) {
@@ -189,7 +193,6 @@ public:
       cout << move.to_str() << endl;
       cout.flush();
       readGridData();
-      updateGridData();
       int runtime;
       cin >> runtime;
       ++g_turn;
@@ -364,19 +367,26 @@ public:
     clearMappingGrid();
     mergeScoreGrid();
     mergeChainGrid();
+  }
 
+  void buildTargetGrid() {
     memcpy(g_copyGrid, g_grid, sizeof(g_grid));
-    memcpy(g_grid, g_mappingGrid, sizeof(g_mappingGrid));
+
+    clearTargetGrid();
+    mappingJewelsToTargetGrid();
+    memcpy(g_grid, g_targetGrid, sizeof(g_targetGrid));
 
     Move move(1, 1, 1, 1);
     int score = applyMove(move, true);
     assert(score == 0);
 
     memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
+    showTargetGrid();
   }
 
-  void mappingJewelsToTargetGrid() {
+  bool mappingJewelsToTargetGrid() {
     fprintf(stderr, "mappingJewelsToTargetGrid =>\n");
+    int maxMappingId = -1;
 
     memset(g_chunkCounter, 0, sizeof(g_chunkCounter));
     for (int x = 1; x <= N; ++x) {
@@ -384,15 +394,73 @@ public:
         int z = calcZ(y, x);
         int mid = g_mappingGrid[z];
         if (mid == E) continue;
+        maxMappingId = max(maxMappingId, mid);
 
         ++g_chunkCounter[mid];
       }
     }
 
-    priority_queue <Jewel, vector<Jewel>, greater<Jewel>> pque;
+    priority_queue <Chunk, vector<Chunk>, greater<Chunk>> chunkPQue;
+    for (int mid = 0; mid <= maxMappingId; ++mid) {
+      chunkPQue.push(Chunk(mid, g_chunkCounter[mid]));
+    }
 
+    priority_queue <Jewel, vector<Jewel>, greater<Jewel>> jewelPQue;
     for (int color = 1; color <= C; ++color) {
-      pque.push(Jewel(color, g_jewelsCounter[color]));
+      jewelPQue.push(Jewel(color, g_jewelsCounter[color]));
+    }
+
+    while (!chunkPQue.empty()) {
+      Chunk chunk = chunkPQue.top();
+      chunkPQue.pop();
+      fprintf(stderr, "mid: %d, cnt: %d\n", chunk.id, chunk.cnt);
+
+      if (jewelPQue.empty()) {
+        return false;
+      } else {
+        stack <Jewel> stack;
+
+        while (!jewelPQue.empty()) {
+          Jewel jewel = jewelPQue.top();
+          jewelPQue.pop();
+          fprintf(stderr, "color: %d, cnt: %d\n", jewel.color, jewel.cnt);
+          if (jewel.cnt < chunk.cnt) continue;
+
+          g_jewelsMapping[chunk.id] = jewel.color;
+          jewel.cnt -= chunk.cnt;
+          jewelPQue.push(jewel);
+
+          break;
+        }
+
+        while (!stack.empty()) {
+          Jewel jewel = stack.top();
+          stack.pop();
+          jewelPQue.push(jewel);
+        }
+      }
+    }
+
+    for (int x = 1; x <= N; ++x) {
+      for (int y = 1; y <= N; ++y) {
+        int z = calcZ(y, x);
+        int mid = g_mappingGrid[z];
+        if (mid == E) continue;
+        g_targetGrid[z] = g_jewelsMapping[mid];
+      }
+    }
+
+    return true;
+  }
+
+  void clearTargetGrid() {
+    memset(g_targetGrid, X, sizeof(g_targetGrid));
+
+    for (int y = 1; y <= N; ++y) {
+      for (int x = 1; x <= N; ++x) {
+        int z = calcZ(y, x);
+        g_targetGrid[z] = E;
+      }
     }
   }
 
