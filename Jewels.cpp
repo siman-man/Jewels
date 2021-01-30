@@ -45,7 +45,7 @@ const int EXT_LINE[MAX_N + 1] = {
 };
 
 const int EXT_LINE_MIN[MAX_N + 1] = {
-  0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 3, 4, 4, 4, 5, 5
+  0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 3, 3, 3, 3, 3, 3
 };
 
 const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
