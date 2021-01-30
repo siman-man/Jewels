@@ -815,7 +815,7 @@ public:
         int s = applyMove(fire);
         memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
         int stepCnt = buildMoves().size();
-        double ss = s * 1.0 / stepCnt;
+        double ss = s * 1.0 / max(1, stepCnt);
 
         if (bestScore < ss) {
           bestScore = ss;
