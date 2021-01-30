@@ -614,6 +614,18 @@ public:
         if (g_moveQueue.empty()) {
           memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
           Result ret = applyMove(move);
+          fprintf(stderr, "[Fire]: moveScore: %d, combo: %d, score: %d\n",
+                  ret.moveScore, ret.combo, ret.score);
+
+          if (ret.combo <= N - 2) {
+            move = fixOutburst();
+
+            if (move.fromY == -1) {
+              move = getFireMove();
+            } else {
+              g_moveQueue.push(getFireMove());
+            }
+          }
           memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
         }
       }
@@ -631,6 +643,44 @@ public:
         fprintf(stderr, "[%d]: runtime: %d\n", g_turn, runtime);
       }
     }
+  }
+
+  Move fixOutburst() {
+    fprintf(stderr, "fixOutburst =>\n");
+    memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
+    Move bestMove;
+    Move fire = getFireMove();
+    int bestScore = applyMove(fire).score;
+    memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
+
+    for (int fromX = 1; fromX <= N; ++fromX) {
+      for (int fromY = 1; fromY <= N; ++fromY) {
+        int fromZ = calcZ(fromY, fromX);
+        if (g_targetGrid[fromZ] != E) continue;
+
+        for (int toX = 1; toX <= N; ++toX) {
+          for (int toY = 1; toY <= N; ++toY) {
+            int toZ = calcZ(toY, toX);
+            if (g_targetGrid[toZ] != E) continue;
+            if (fromZ == toZ) continue;
+            if (g_grid[fromZ] == g_grid[toZ]) continue;
+
+            Move move(fromY, fromX, toY, toX);
+            applyMove(move);
+            Result ret = applyMove(fire);
+
+            if (bestScore < ret.score) {
+              bestScore = ret.score;
+              bestMove = move;
+            }
+
+            memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
+          }
+        }
+      }
+    }
+
+    return bestMove;
   }
 
   Move selectBestMove() {
