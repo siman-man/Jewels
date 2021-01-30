@@ -784,26 +784,52 @@ public:
     int score = applyMove(move, true);
     // showTargetGrid();
     int limit = 100;
+    int tryCount = 0;
+    int bestTargetGrid[GRID_SIZE * GRID_SIZE];
+    int minStepCnt = INT_MAX;
 
-    while (score != 0 && limit > 0) {
-      shuffleColorMapping();
+    while (tryCount < 50) {
+      int i = xor128() % g_mappingId;
+      int j = xor128() % g_mappingId;
+      if (!canShuffleColorMapping(i, j)) continue;
+      shuffleColorMapping(i, j);
+
       mappingToTargetGrid();
       memcpy(g_grid, g_targetGrid, sizeof(g_targetGrid));
       score = applyMove(move, true);
+
+      if (score == 0) {
+        memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
+        int stepCnt = buildMoves().size();
+
+        if (minStepCnt > stepCnt) {
+          minStepCnt = stepCnt;
+          memcpy(bestTargetGrid, g_targetGrid, sizeof(g_targetGrid));
+        } else {
+          assert(canShuffleColorMapping(i, j));
+          shuffleColorMapping(i, j);
+        }
+      } else {
+        assert(canShuffleColorMapping(i, j));
+        shuffleColorMapping(i, j);
+      }
+
       --limit;
+      ++tryCount;
     }
 
     memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
-    if (limit <= 0) return false;
+    memcpy(g_targetGrid, bestTargetGrid, sizeof(bestTargetGrid));
+    if (minStepCnt == INT_MAX) return false;
 
-    assert(score == 0);
+    // assert(score == 0);
     // showTargetGrid();
 
     return true;
   }
 
   vector <Move> buildMoves() {
-    fprintf(stderr, "buildMoves =>\n");
+    // fprintf(stderr, "buildMoves =>\n");
     memcpy(g_copyGrid, g_grid, sizeof(g_grid));
     vector <Move> moves;
     queue<int> needExchangePositions;
@@ -979,29 +1005,26 @@ public:
     return true;
   }
 
-  bool shuffleColorMapping() {
-    int limit = 100;
+  bool canShuffleColorMapping(int i, int j) {
+    int color1 = g_jewelsMapping[i];
+    int color2 = g_jewelsMapping[j];
+    if (color1 == color2) return false;
 
-    while (limit > 0) {
-      --limit;
+    int cnt1 = g_remainJewelsCounter[color1] + (g_mappingCount[i] - g_mappingCount[j]);
+    int cnt2 = g_remainJewelsCounter[color2] + (g_mappingCount[j] - g_mappingCount[i]);
+    if (cnt1 < 0 || cnt2 < 0) return false;
 
-      int i = xor128() % g_mappingId;
-      int j = xor128() % g_mappingId;
-      int color1 = g_jewelsMapping[i];
-      int color2 = xor128() % C + 1;
-      if (color1 == color2) continue;
+    return true;
+  }
 
-      int cnt1 = g_remainJewelsCounter[i] + (g_mappingCount[i] - g_mappingCount[j]);
-      int cnt2 = g_remainJewelsCounter[j] + (g_mappingCount[j] - g_mappingCount[i]);
-      if (cnt1 < 0 || cnt2 < 0) continue;
-
-      g_remainJewelsCounter[i] = cnt1;
-      g_remainJewelsCounter[j] = cnt2;
-      swap(g_jewelsMapping[i], g_jewelsMapping[j]);
-      return true;
-    }
-
-    return false;
+  void shuffleColorMapping(int i, int j) {
+    int color1 = g_jewelsMapping[i];
+    int color2 = g_jewelsMapping[j];
+    int cnt1 = g_remainJewelsCounter[color1] + (g_mappingCount[i] - g_mappingCount[j]);
+    int cnt2 = g_remainJewelsCounter[color2] + (g_mappingCount[j] - g_mappingCount[i]);
+    g_remainJewelsCounter[color1] = cnt1;
+    g_remainJewelsCounter[color2] = cnt2;
+    swap(g_jewelsMapping[i], g_jewelsMapping[j]);
   }
 
   void mappingToTargetGrid() {
