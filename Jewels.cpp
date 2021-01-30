@@ -446,6 +446,18 @@ struct Chunk {
   }
 };
 
+struct Result {
+  int moveScore;
+  int combo;
+  int score;
+
+  Result(int moveScore = -1, int combo = -1) {
+    this->moveScore = moveScore;
+    this->combo = combo;
+    this->score = moveScore * combo;
+  }
+};
+
 struct Jewel {
   int color;
   int cnt;
@@ -632,7 +644,7 @@ public:
             memcpy(g_copyGrid, g_grid, sizeof(g_grid));
 
             Move move(y, x, y2, x2);
-            int score = applyMove(move);
+            int score = applyMove(move).score;
 
             if (bestScore < score) {
               bestScore = score;
@@ -664,14 +676,14 @@ public:
     return false;
   }
 
-  int applyMove(Move &move, bool skipFireCheck = false) {
+  Result applyMove(Move &move, bool skipFireCheck = false) {
     int moveScore = 0;
     int combo = 0;
     bool matched = true;
     swap(g_grid[move.fromZ], g_grid[move.toZ]);
 
     if (!skipFireCheck && !isFire(move.fromZ) && !isFire(move.toZ)) {
-      return 0;
+      return Result(0, 0);
     }
 
     while (matched) {
@@ -771,7 +783,7 @@ public:
       if (matched) ++combo;
     }
 
-    return moveScore * combo;
+    return Result(moveScore, combo);
   }
 
   void selectBestGrid() {
@@ -791,7 +803,7 @@ public:
     memcpy(g_grid, g_targetGrid, sizeof(g_targetGrid));
 
     Move move(1, 1, 1, 1);
-    int score = applyMove(move, true);
+    int score = applyMove(move, true).score;
     // showTargetGrid();
     int limit = 100;
     int tryCount = 0;
@@ -809,10 +821,10 @@ public:
 
       mappingToTargetGrid();
       memcpy(g_grid, g_targetGrid, sizeof(g_targetGrid));
-      score = applyMove(move, true);
+      score = applyMove(move, true).score;
 
       if (score == 0) {
-        int s = applyMove(fire);
+        int s = applyMove(fire).score;
         memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
         int stepCnt = buildMoves().size();
         double ss = s * 1.0 / max(1, stepCnt);
@@ -999,7 +1011,7 @@ public:
           mappingToTargetGrid();
           memcpy(g_grid, g_targetGrid, sizeof(g_targetGrid));
           Move move(1, 1, 1, 1);
-          int score = applyMove(move, true);
+          int score = applyMove(move, true).score;
 
           if (score == 0) {
             g_remainJewelsCounter[jewel.color] -= chunk.cnt;
