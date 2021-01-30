@@ -795,6 +795,8 @@ public:
     int tryCount = 0;
     int bestTargetGrid[GRID_SIZE * GRID_SIZE];
     int minStepCnt = INT_MAX;
+    double bestScore = 0;
+    Move fire(1, 1, 1, 8);
 
     while (tryCount < 100) {
       ++tryCount;
@@ -808,10 +810,13 @@ public:
       score = applyMove(move, true);
 
       if (score == 0) {
+        int s = applyMove(fire);
         memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
         int stepCnt = buildMoves().size();
+        double ss = s * 1.0 / stepCnt;
 
-        if (minStepCnt > stepCnt) {
+        if (bestScore < ss) {
+          bestScore = ss;
           minStepCnt = stepCnt;
           memcpy(bestTargetGrid, g_targetGrid, sizeof(g_targetGrid));
         } else {
