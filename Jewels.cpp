@@ -932,7 +932,7 @@ public:
   }
 
   bool mappingJewelsToTargetGrid() {
-    fprintf(stderr, "%d: mappingJewelsToTargetGrid =>\n", g_buildTargetGridCnt);
+    // fprintf(stderr, "%d: mappingJewelsToTargetGrid =>\n", g_buildTargetGridCnt);
     memset(g_jewelsMapping, -1, sizeof(g_jewelsMapping));
     memcpy(g_remainJewelsCounter, g_jewelsCounter, sizeof(g_jewelsCounter));
     int maxMappingId = -1;
