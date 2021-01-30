@@ -576,7 +576,7 @@ public:
 
         if (g_moveQueue.size() > 0) {
           totalStepCnt += g_moveQueue.size();
-          fprintf(stderr, "[turn %d] Que size: %d, extLine: %d\n", g_turn, (int) g_moveQueue.size(), extLine + 1);
+          fprintf(stderr, "[turn: %d] Que size: %d, extLine: %d\n", g_turn, (int) g_moveQueue.size(), extLine + 1);
           ++g_buildTargetGridCnt;
         }
       }
@@ -609,7 +609,9 @@ public:
       remain = 10000 - runtime;
       ++g_turn;
 
-      // fprintf(stderr, "[%d]: runtime: %d\n", g_turn, runtime);
+      if (g_turn == 999) {
+        fprintf(stderr, "[%d]: runtime: %d\n", g_turn, runtime);
+      }
     }
   }
 
@@ -796,7 +798,7 @@ public:
     int bestTargetGrid[GRID_SIZE * GRID_SIZE];
     int minStepCnt = INT_MAX;
     double bestScore = 0;
-    Move fire(1, 1, 1, 8);
+    Move fire = getFireMove();
 
     while (tryCount < 100) {
       ++tryCount;
@@ -839,6 +841,20 @@ public:
     // showTargetGrid();
 
     return true;
+  }
+
+  Move getFireMove() {
+    if (N == 13) {
+      return Move(1, 2, 1, 9);
+    } else if (N == 14) {
+      return Move(1, 3, 1, 10);
+    } else if (N == 15) {
+      return Move(1, 5, 1, 11);
+    } else if (N == 16) {
+      return Move(1, 5, 1, 12);
+    } else {
+      return Move(1, 1, 1, 8);
+    }
   }
 
   vector <Move> buildMoves() {
@@ -885,17 +901,7 @@ public:
     if (limit <= 0) return vector<Move>();
 
     if (moves.size() > 0) {
-      if (N <= 12) {
-        moves.push_back(Move(1, 1, 1, 8));
-      } else if (N == 13) {
-        moves.push_back(Move(1, 2, 1, 9));
-      } else if (N == 14) {
-        moves.push_back(Move(1, 3, 1, 10));
-      } else if (N == 15) {
-        moves.push_back(Move(1, 5, 1, 11));
-      } else if (N == 16) {
-        moves.push_back(Move(1, 5, 1, 12));
-      }
+      moves.push_back(getFireMove());
     }
 
     memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
