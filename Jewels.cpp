@@ -817,7 +817,7 @@ public:
         int stepCnt = buildMoves().size();
         double ss = s * 1.0 / max(1, stepCnt);
 
-        if (bestScore < ss) {
+        if (stepCnt > 0 && bestScore < ss) {
           bestScore = ss;
           minStepCnt = stepCnt;
           memcpy(bestTargetGrid, g_targetGrid, sizeof(g_targetGrid));
