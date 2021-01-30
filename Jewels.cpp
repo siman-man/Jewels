@@ -789,6 +789,7 @@ public:
     int minStepCnt = INT_MAX;
 
     while (tryCount < 50) {
+      ++tryCount;
       int i = xor128() % g_mappingId;
       int j = xor128() % g_mappingId;
       if (!canShuffleColorMapping(i, j)) continue;
@@ -815,7 +816,6 @@ public:
       }
 
       --limit;
-      ++tryCount;
     }
 
     memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
