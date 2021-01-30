@@ -244,11 +244,11 @@ const int CHAIN_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // N = 8
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
-    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, 2, 4, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 2, 3, 5, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 2, 3, 4, 6, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 3, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 3, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
@@ -265,12 +265,12 @@ const int CHAIN_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // N = 9
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
-    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, 2, 4, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 2, 3, 5, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 2, 3, 4, 6, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 3, 4, 5, 7, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 3, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 3, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 4, 5, 6, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 5, 6, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 6, E, E, E,  E, E, E, E, E, E, E, E, E, E, E, E, X,
@@ -286,13 +286,13 @@ const int CHAIN_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // N = 10
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
-    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, 2, 4, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 2, 3, 5, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 2, 3, 4, 6, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 3, 4, 5, 7, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 4, 5, 6, 8, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 3, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 3, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 4, 5, 6, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 5, 6, 7, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 6, 7, E, E,  E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 7, E, E, E,  E, E, E, E, E, E, E, E, E, E, E, E, X,
@@ -618,7 +618,7 @@ public:
           fprintf(stderr, "[%d - Fire]: moveScore: %d, combo: %d, score: %d\n",
                   g_turn, ret.moveScore, ret.combo, ret.score);
 
-          if (ret.combo <= N - 2 && g_turn < 999) {
+          if (N <= 10 && ret.combo <= N - 2 && g_turn < 999) {
             move = fixOutburst();
 
             if (move.fromY == -1) {
