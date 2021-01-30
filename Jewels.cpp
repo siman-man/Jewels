@@ -44,6 +44,10 @@ const int EXT_LINE[MAX_N + 1] = {
   0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4, 4, 5, 5, 5, 6, 9
 };
 
+const int EXT_LINE_MIN[MAX_N + 1] = {
+  0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 1, 1, 1, 1, 1, 1
+};
+
 const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // N = 8
   {
@@ -543,16 +547,16 @@ public:
   void run() {
     Move move;
     int remain = 9999;
-    int extLine = 2;
 
     for (int i = 0; i < MOVE_NUM; i++) {
       memcpy(g_originGrid, g_grid, sizeof(g_grid));
       // fprintf(stderr, "turn %d: \n", g_turn);
 
       if (g_moveQueue.empty()) {
-        extLine = EXT_LINE[N];
+        int extLine = EXT_LINE[N];
+        int minLine = EXT_LINE_MIN[N];
 
-        while (g_moveQueue.empty() && extLine >= 0) {
+        while (g_moveQueue.empty() && extLine >= minLine) {
           buildMappingGrid(extLine);
 
           if (buildTargetGrid()) {
