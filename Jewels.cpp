@@ -800,7 +800,7 @@ public:
     double bestScore = 0;
     Move fire = getFireMove();
 
-    while (tryCount < 100) {
+    while (tryCount < 1000) {
       ++tryCount;
       int i = xor128() % g_mappingId;
       int j = xor128() % g_mappingId;
