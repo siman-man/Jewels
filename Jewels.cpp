@@ -788,7 +788,7 @@ public:
     int bestTargetGrid[GRID_SIZE * GRID_SIZE];
     int minStepCnt = INT_MAX;
 
-    while (tryCount < 50) {
+    while (tryCount < 100) {
       ++tryCount;
       int i = xor128() % g_mappingId;
       int j = xor128() % g_mappingId;
