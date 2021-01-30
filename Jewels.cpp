@@ -785,7 +785,7 @@ public:
     int limit = 100;
 
     while (score != 0 && limit > 0) {
-      shuffleMapping();
+      shuffleColorMapping();
       mappingToTargetGrid();
       memcpy(g_grid, g_targetGrid, sizeof(g_targetGrid));
       score = applyMove(move, true);
@@ -981,7 +981,7 @@ public:
     return true;
   }
 
-  bool shuffleMapping() {
+  bool shuffleColorMapping() {
     int limit = 100;
 
     while (limit > 0) {
@@ -1012,6 +1012,7 @@ public:
     for (int x = 1; x <= N; ++x) {
       for (int y = 1; y <= N; ++y) {
         int z = calcZ(y, x);
+        g_targetGrid[z] = E;
         int mid = g_mappingGrid[z];
         if (mid == E) continue;
         if (g_jewelsMapping[mid] == -1) continue;
