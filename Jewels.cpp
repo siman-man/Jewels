@@ -614,10 +614,10 @@ public:
         if (g_moveQueue.empty()) {
           memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
           Result ret = applyMove(move);
-          fprintf(stderr, "[Fire]: moveScore: %d, combo: %d, score: %d\n",
-                  ret.moveScore, ret.combo, ret.score);
+          fprintf(stderr, "[%d - Fire]: moveScore: %d, combo: %d, score: %d\n",
+                  g_turn, ret.moveScore, ret.combo, ret.score);
 
-          if (ret.combo <= N - 2) {
+          if (ret.combo <= N - 2 && g_turn < 999) {
             move = fixOutburst();
 
             if (move.fromY == -1) {
@@ -626,6 +626,7 @@ public:
               g_moveQueue.push(getFireMove());
             }
           }
+
           memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
         }
       }
@@ -650,7 +651,9 @@ public:
     memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
     Move bestMove;
     Move fire = getFireMove();
-    int bestScore = applyMove(fire).score;
+    Result base = applyMove(fire);
+    double bestScore = base.score * 1.0;
+    int maxCombo = base.combo;
     memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
 
     for (int fromX = 1; fromX <= N; ++fromX) {
@@ -668,9 +671,11 @@ public:
             Move move(fromY, fromX, toY, toX);
             applyMove(move);
             Result ret = applyMove(fire);
+            double score = ret.score * 1.0;
 
-            if (bestScore < ret.score) {
-              bestScore = ret.score;
+            if (bestScore < score && maxCombo < ret.combo) {
+              bestScore = score;
+              maxCombo = ret.combo;
               bestMove = move;
             }
 
