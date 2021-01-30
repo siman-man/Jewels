@@ -610,6 +610,12 @@ public:
           move = g_moveQueue.front();
           g_moveQueue.pop();
         } while (g_moveQueue.size() > 0 && g_originGrid[move.fromZ] == g_originGrid[move.toZ]);
+
+        if (g_moveQueue.empty()) {
+          memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
+          Result ret = applyMove(move);
+          memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
+        }
       }
       // Move move(r1, c1, r2, c2);
       // assert(g_originGrid[move.fromZ] != g_originGrid[move.toZ]);
@@ -824,10 +830,10 @@ public:
       score = applyMove(move, true).score;
 
       if (score == 0) {
-        int s = applyMove(fire).score;
+        Result ret = applyMove(fire);
         memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
         int stepCnt = buildMoves().size();
-        double ss = s * 1.0 / max(1, stepCnt);
+        double ss = ret.score * 1.0 / max(1, stepCnt);
 
         if (stepCnt > 0 && bestScore < ss) {
           bestScore = ss;
