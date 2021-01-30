@@ -1,4 +1,5 @@
 #include <cassert>
+#include <climits>
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
