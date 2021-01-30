@@ -547,14 +547,16 @@ public:
   void run() {
     Move move;
     int remain = 9999;
+    double totalStepCnt = 0;
 
     for (int i = 0; i < MOVE_NUM; i++) {
       memcpy(g_originGrid, g_grid, sizeof(g_grid));
       // fprintf(stderr, "turn %d: \n", g_turn);
 
       if (g_moveQueue.empty()) {
+        double ave = totalStepCnt / max(1, g_buildTargetGridCnt);
         int extLine = EXT_LINE[N];
-        int minLine = EXT_LINE_MIN[N];
+        int minLine = (g_turn + ave < 990) ? EXT_LINE_MIN[N] : 0;
 
         while (g_moveQueue.empty() && extLine >= minLine) {
           buildMappingGrid(extLine);
@@ -573,6 +575,7 @@ public:
         }
 
         if (g_moveQueue.size() > 0) {
+          totalStepCnt += g_moveQueue.size();
           fprintf(stderr, "[turn %d] Que size: %d, extLine: %d\n", g_turn, (int) g_moveQueue.size(), extLine + 1);
           ++g_buildTargetGridCnt;
         }
