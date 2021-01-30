@@ -588,8 +588,9 @@ public:
 
         if (g_moveQueue.size() > 0) {
           totalStepCnt += g_moveQueue.size();
-          fprintf(stderr, "[turn: %d] Que size: %d, extLine: %d\n", g_turn, (int) g_moveQueue.size(), extLine + 1);
           ++g_buildTargetGridCnt;
+          fprintf(stderr, "[turn: %d, buildCnt: %d] Que size: %d, extLine: %d\n",
+                  g_turn, g_buildTargetGridCnt, (int) g_moveQueue.size(), extLine + 1);
         }
       }
 
