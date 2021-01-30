@@ -612,13 +612,13 @@ public:
           g_moveQueue.pop();
         } while (g_moveQueue.size() > 0 && g_originGrid[move.fromZ] == g_originGrid[move.toZ]);
 
-        if (g_moveQueue.empty()) {
+        if (g_moveQueue.empty() && N <= 10) {
           memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
           Result ret = applyMove(move);
           fprintf(stderr, "[%d - Fire]: moveScore: %d, combo: %d, score: %d\n",
                   g_turn, ret.moveScore, ret.combo, ret.score);
 
-          if (N <= 10 && ret.combo <= N - 2 && g_turn < 999) {
+          if (ret.combo <= N - 2 && g_turn < 999) {
             move = fixOutburst();
 
             if (move.fromY == -1) {
