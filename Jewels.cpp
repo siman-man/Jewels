@@ -591,6 +591,8 @@ public:
           ++g_buildTargetGridCnt;
           fprintf(stderr, "[turn: %d, buildCnt: %d] Que size: %d, extLine: %d\n",
                   g_turn, g_buildTargetGridCnt, (int) g_moveQueue.size(), extLine + 1);
+
+          showJewelsDiff();
         }
       }
 
@@ -1283,6 +1285,27 @@ public:
     }
 
     fprintf(stderr, "\n");
+  }
+
+  void showJewelsDiff() {
+    int fromCounter[C + 1];
+    int toCounter[C + 1];
+    memset(fromCounter, 0, sizeof(fromCounter));
+    memset(toCounter, 0, sizeof(toCounter));
+
+    for (int x = 1; x <= N; ++x) {
+      for (int y = 1; y <= N; ++y) {
+        int z = calcZ(y, x);
+        if (g_targetGrid[z] == E) continue;
+
+        ++fromCounter[g_grid[z]];
+        ++toCounter[g_targetGrid[z]];
+      }
+    }
+
+    for (int color = 1; color <= C; ++color) {
+      fprintf(stderr, "color %d: %d - %d\n", color, fromCounter[color], toCounter[color]);
+    }
   }
 };
 
