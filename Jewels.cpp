@@ -41,7 +41,7 @@ const int LINE_SCORE[MAX_N + 1] = {
 };
 
 const int EXT_LINE[MAX_N + 1] = {
-  0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4, 4, 5, 5, 5, 6, 9
+  0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4, 4, 5, 6, 6, 8, 9
 };
 
 const int EXT_LINE_MIN[MAX_N + 1] = {
