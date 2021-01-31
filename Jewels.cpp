@@ -1288,6 +1288,8 @@ public:
   }
 
   void showJewelsDiff() {
+    int lackCnt = 0;
+    int supCnt = 0;
     int diffCnt = 0;
     int fromCounter[C + 1];
     int toCounter[C + 1];
@@ -1305,11 +1307,17 @@ public:
       }
     }
 
-    fprintf(stderr, "diffCnt: %d\n", diffCnt);
-
     for (int color = 1; color <= C; ++color) {
       fprintf(stderr, "color %d: %d - %d\n", color, fromCounter[color], toCounter[color]);
+
+      if (fromCounter[color] > toCounter[color]) {
+        supCnt += fromCounter[color] - toCounter[color];
+      } else {
+        lackCnt += toCounter[color] - fromCounter[color];
+      }
     }
+
+    fprintf(stderr, "diffCnt: %d, supCnt: %d, lackCnt: %d,\n", diffCnt, supCnt, lackCnt);
   }
 };
 
