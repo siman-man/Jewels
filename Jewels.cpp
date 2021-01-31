@@ -324,7 +324,7 @@ const int CHAIN_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // N = 11
   {
     X, X,  X,  X,  X,  X,  X, X, X, X, X, X, X, X, X, X, X, X,
-    X, 0,  E,  E,  E,  E,  E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 16,  E,  E,  E,  E, E, E, E, E, E, E, E, E, E, E, X,
     X, 0,  1,  3,  E,  E,  E, E, E, E, E, E, E, E, E, E, E, X,
     X, 0,  1,  2, 15,  E,  E, E, E, E, E, E, E, E, E, E, E, X,
     X, 1,  2,  3, 14, 15,  E, E, E, E, E, E, E, E, E, E, E, X,
