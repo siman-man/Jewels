@@ -935,22 +935,50 @@ public:
 
   vector <Move> buildMoves() {
     // fprintf(stderr, "buildMoves =>\n");
-    memcpy(g_copyGrid, g_grid, sizeof(g_grid));
+    memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
     vector <Move> moves;
     queue<int> needExchangePositions;
 
     for (int y = 1; y <= N; ++y) {
       for (int x = 1; x <= N; ++x) {
         int z = calcZ(y, x);
+        int fromColor = g_grid[z];
         if (g_targetGrid[z] == E) continue;
-        if (g_targetGrid[z] == g_grid[z]) continue;
+        if (g_targetGrid[z] == fromColor) continue;
 
-        needExchangePositions.push(z);
+        bool found = false;
+
+        for (int y2 = 1; y2 <= N && !found; ++y2) {
+          for (int x2 = 1; x2 <= N && !found; ++x2) {
+            int z2 = calcZ(y2, x2);
+            int toColor = g_grid[z2];
+            if (fromColor == toColor) continue;
+            if (g_targetGrid[z2] == E) continue;
+            if (g_targetGrid[z2] == toColor) continue;
+            if (g_targetGrid[z] != toColor) continue;
+            if (g_targetGrid[z2] != fromColor) continue;
+
+            assert(g_targetGrid[z] == toColor);
+            assert(g_targetGrid[z2] == fromColor);
+            assert(fromColor != toColor);
+            swap(g_grid[z], g_grid[z2]);
+
+            if (!isFire(z) && !isFire(z2)) {
+              moves.push_back(Move(y, x, y2, x2));
+              found = true;
+            } else {
+              swap(g_grid[z], g_grid[z2]);
+            }
+          }
+        }
+
+        if (!found) {
+          needExchangePositions.push(z);
+        }
       }
     }
 
     int limit = 1000;
-    memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
 
     while (!needExchangePositions.empty() && limit > 0) {
       int z = needExchangePositions.front();
