@@ -90,15 +90,15 @@ const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // N = 9
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
-    X, 0, 1, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 0, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 1, 0, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
@@ -282,15 +282,15 @@ const int CHAIN_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // N = 9
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
-    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 2, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 2, 3, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 3, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 4, 5, 6, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 5, 6, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 6, E, E, E,  E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 0, 1, 0, 2, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 3, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 3, 1, 4, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 3, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 5, 9, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 5, 8, 6, 9, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 8, 6, 9, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 7, 6, 7, 7, 8, E, E, E, E, E, E, E, E, E, E, E, X,
     X, X, X, X, X,  X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X, X,  X,  X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X,  X,  X,  X, X, X, X, X, X, X, X, X, X, X, X, X,
@@ -978,6 +978,8 @@ public:
       return Move(1, 5, 1, 11);
     } else if (N == 16) {
       return Move(1, 5, 1, 12);
+    } else if (N == 9) {
+      return Move(1, 5, 2, 6);
     } else {
       return Move(1, 1, 1, 8);
     }
