@@ -565,6 +565,10 @@ public:
       memcpy(g_originGrid, g_grid, sizeof(g_grid));
       // fprintf(stderr, "turn %d: \n", g_turn);
 
+      if (remain < 1000) {
+        g_moveQueue.push(Move(1, 1, 1, 2));
+      }
+
       if (g_moveQueue.empty()) {
         double ave = totalStepCnt / max(1, g_buildTargetGridCnt);
         int extLine = EXT_LINE[N];
