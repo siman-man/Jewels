@@ -1115,19 +1115,18 @@ public:
         int toColor = g_grid[z];
         if (g_targetGrid[z] == g_grid[z]) continue;
         if (g_grid[z] != targetColor) continue;
-        if (g_lackJewelsCount[fromColor] > 0 && g_targetGrid[z] == E) continue;
-        if (g_surplusJewelsCount[toColor] > 0) continue;
+        if (g_surplusJewelsCount[fromColor] <= 0 && g_targetGrid[z] == E) continue;
+        if (g_lackJewelsCount[toColor] <= 0 && g_targetGrid[z] == E) continue;
 
         swap(g_grid[fromZ], g_grid[z]);
 
         if (!isFire(fromZ) && !isFire(z)) {
           if (g_targetGrid[z] == E) {
-            if (g_surplusJewelsCount[fromColor] > 0) {
-              g_surplusJewelsCount[fromColor]--;
-            }
-            if (g_lackJewelsCount[toColor] > 0) {
-              g_lackJewelsCount[toColor]--;
-            }
+            assert(g_surplusJewelsCount[fromColor] > 0);
+            g_surplusJewelsCount[fromColor]--;
+
+            assert(g_lackJewelsCount[toColor] > 0);
+            g_lackJewelsCount[toColor]--;
           }
 
           return Move(fromY, fromX, y, x);
