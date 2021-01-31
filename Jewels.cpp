@@ -523,8 +523,7 @@ int g_remainJewelsCounter[MAX_C + 1];
 int g_jewelsMapping[GRID_SIZE * GRID_SIZE];
 int g_mappingCount[GRID_SIZE * GRID_SIZE];
 int g_chunkCounter[GRID_SIZE * GRID_SIZE];
-int g_surplusJewelsCount[MAX_C + 1];
-int g_lackJewelsCount[MAX_C + 1];
+int g_jewelsCountDiff[MAX_C + 1];
 int g_lineHeight[GRID_SIZE];
 ll g_removed[GRID_SIZE * GRID_SIZE];
 int g_turn;
@@ -1115,18 +1114,42 @@ public:
         int toColor = g_grid[z];
         if (g_targetGrid[z] == g_grid[z]) continue;
         if (g_grid[z] != targetColor) continue;
-        if (g_surplusJewelsCount[fromColor] <= 0 && g_targetGrid[z] == E) continue;
-        if (g_lackJewelsCount[toColor] <= 0 && g_targetGrid[z] == E) continue;
+        if (g_targetGrid[z] == E) {
+          if (g_jewelsCountDiff[fromColor] <= 0) continue;
+          if (g_jewelsCountDiff[toColor] >= 0) continue;
+        }
 
         swap(g_grid[fromZ], g_grid[z]);
 
         if (!isFire(fromZ) && !isFire(z)) {
           if (g_targetGrid[z] == E) {
-            assert(g_surplusJewelsCount[fromColor] > 0);
-            g_surplusJewelsCount[fromColor]--;
+            assert(g_jewelsCountDiff[fromColor] > 0);
+            g_jewelsCountDiff[fromColor]--;
 
-            assert(g_lackJewelsCount[toColor] > 0);
-            g_lackJewelsCount[toColor]--;
+            assert(g_jewelsCountDiff[toColor] < 0);
+            g_jewelsCountDiff[toColor]++;
+          }
+
+          return Move(fromY, fromX, y, x);
+        }
+
+        swap(g_grid[fromZ], g_grid[z]);
+      }
+    }
+
+    for (int x = 1; x <= N; ++x) {
+      for (int y = 1; y <= N; ++y) {
+        int z = calcZ(y, x);
+        int toColor = g_grid[z];
+        if (g_targetGrid[z] == g_grid[z]) continue;
+        if (g_grid[z] != targetColor) continue;
+
+        swap(g_grid[fromZ], g_grid[z]);
+
+        if (!isFire(fromZ) && !isFire(z)) {
+          if (g_targetGrid[z] == E) {
+            g_jewelsCountDiff[fromColor]--;
+            g_jewelsCountDiff[toColor]++;
           }
 
           return Move(fromY, fromX, y, x);
@@ -1410,8 +1433,6 @@ public:
     int toCounter[C + 1];
     memset(fromCounter, 0, sizeof(fromCounter));
     memset(toCounter, 0, sizeof(toCounter));
-    memset(g_surplusJewelsCount, 0, sizeof(g_surplusJewelsCount));
-    memset(g_lackJewelsCount, 0, sizeof(g_lackJewelsCount));
 
     for (int x = 1; x <= N; ++x) {
       for (int y = 1; y <= N; ++y) {
@@ -1429,12 +1450,11 @@ public:
         fprintf(stderr, "color %d: %d - %d\n", color, fromCounter[color], toCounter[color]);
       }
 
+      g_jewelsCountDiff[color] = fromCounter[color] - toCounter[color];
       if (fromCounter[color] > toCounter[color]) {
-        g_surplusJewelsCount[color] = fromCounter[color] - toCounter[color];
-        supCnt += g_surplusJewelsCount[color];
+        supCnt += fromCounter[color] - toCounter[color];
       } else {
-        g_lackJewelsCount[color] = toCounter[color] - fromCounter[color];
-        lackCnt += g_lackJewelsCount[color];
+        lackCnt += toCounter[color] - fromCounter[color];
       }
     }
 
