@@ -15,9 +15,11 @@
 using namespace std;
 typedef long long ll;
 
-double TIME_LIMIT = 2.0;
+double TIME_LIMIT = 9.0;
 ll startCycle;
+ll firstCycle;
 const ll CYCLE_PER_SEC = 2700000000;
+int g_runtime;
 
 unsigned long long int getCycle() {
   unsigned int low, high;
@@ -540,6 +542,7 @@ public:
     g_turn = 0;
     g_removeId = 0;
     g_buildTargetGridCnt = 0;
+    g_runtime = 0;
     memset(g_grid, X, sizeof(g_grid));
     readGridData();
   }
@@ -585,11 +588,14 @@ public:
       }
 
       if (g_moveQueue.empty()) {
+        firstCycle = getCycle();
+        double start_at = g_runtime / 1000.0;
         double ave = totalStepCnt / max(1, g_buildTargetGridCnt);
+        double currentTime = start_at + getTime(firstCycle);
         int extLine = EXT_LINE[N];
         int minLine = (g_turn + ave < 990) ? EXT_LINE_MIN[N] : 0;
 
-        while (g_moveQueue.empty() && extLine >= minLine) {
+        while (g_moveQueue.empty() && extLine >= minLine && currentTime < TIME_LIMIT) {
           buildMappingGrid(extLine);
 
           if (buildTargetGrid()) {
@@ -602,14 +608,15 @@ public:
             }
           }
 
+          currentTime = start_at + getTime(firstCycle);
           --extLine;
         }
 
         if (g_moveQueue.size() > 0) {
           totalStepCnt += g_moveQueue.size();
           ++g_buildTargetGridCnt;
-          fprintf(stderr, "[turn: %d, buildCnt: %d] Que size: %d, extLine: %d\n",
-                  g_turn, g_buildTargetGridCnt, (int) g_moveQueue.size(), extLine + 1);
+          fprintf(stderr, "[time: %d, turn: %d, buildCnt: %d] Que size: %d, extLine: %d\n",
+                  g_runtime, g_turn, g_buildTargetGridCnt, (int) g_moveQueue.size(), extLine + 1);
 
           showJewelsDiff();
         }
@@ -619,6 +626,7 @@ public:
         if (remain < 1000) {
           move = Move(1, 1, 1, 2);
         } else {
+          fprintf(stderr, "remain: %d\n", remain);
           move = selectBestMove();
         }
       } else {
@@ -657,13 +665,12 @@ public:
       cout << move.to_str() << endl;
       cout.flush();
       readGridData();
-      int runtime;
-      cin >> runtime;
-      remain = 10000 - runtime;
+      cin >> g_runtime;
+      remain = 10000 - g_runtime;
       ++g_turn;
 
       if (g_turn == 999) {
-        fprintf(stderr, "[%d]: runtime: %d\n", g_turn, runtime);
+        fprintf(stderr, "[%d]: runtime: %d\n", g_turn, g_runtime);
       }
     }
   }
@@ -711,8 +718,10 @@ public:
   }
 
   Move selectBestMove() {
+    firstCycle = getCycle();
     int bestScore = -1;
     Move bestMove;
+    double start_at = g_runtime / 1000.0;
 
     for (int x = 1; x <= N; ++x) {
       for (int y = 1; y <= N; ++y) {
@@ -735,6 +744,8 @@ public:
             }
 
             memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
+            double currentTime = start_at + getTime(firstCycle);
+            if (currentTime > TIME_LIMIT) return bestMove;
           }
         }
       }
@@ -869,9 +880,6 @@ public:
     return Result(moveScore, combo);
   }
 
-  void selectBestGrid() {
-  }
-
   void buildMappingGrid(int extLine) {
     clearMappingGrid();
     mergeScoreGrid(extLine);
@@ -888,7 +896,6 @@ public:
     Move move(1, 1, 1, 1);
     int score = applyMove(move, true).score;
     // showTargetGrid();
-    int limit = 100;
     int tryCount = 0;
     int bestTargetGrid[GRID_SIZE * GRID_SIZE];
     int minStepCnt = INT_MAX;
@@ -898,9 +905,16 @@ public:
     double totalDiff = 0.0;
     double k = 2.0;
     int R = 500000;
-    int t1, t2;
+    startCycle = getCycle();
+    double currentTime = getTime(startCycle);
 
-    while (tryCount < 10000) {
+    double timeLimit = 0.2;
+    if (N >= 14) {
+      timeLimit = 0.4;
+    }
+
+    while (currentTime < timeLimit) {
+      currentTime = getTime(startCycle);
       double remainTime = (10000 - tryCount) / 10000.0;
       ++tryCount;
       int i = xor128() % g_mappingId;
@@ -918,6 +932,7 @@ public:
         int stepCnt = buildMoves().size();
         double ss = ret.score * 1.0 / max(1, stepCnt);
         double diffScore = ss - currentScore;
+        totalDiff += fabs(diffScore);
 
         if (stepCnt > 0) {
           if (diffScore > 0 || (xor128() % R < R * exp(diffScore / (k * sqrt(remainTime))))) {
@@ -940,8 +955,6 @@ public:
         assert(canShuffleColorMapping(i, j));
         shuffleColorMapping(i, j);
       }
-
-      --limit;
     }
 
     memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
