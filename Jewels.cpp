@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cmath>
 #include <climits>
 #include <algorithm>
 #include <cstdlib>
@@ -13,6 +14,20 @@
 
 using namespace std;
 typedef long long ll;
+
+double TIME_LIMIT = 2.0;
+ll startCycle;
+const ll CYCLE_PER_SEC = 2700000000;
+
+unsigned long long int getCycle() {
+  unsigned int low, high;
+  __asm__ volatile ("rdtsc" : "=a" (low), "=d" (high));
+  return ((unsigned long long int) low) | ((unsigned long long int) high << 32);
+}
+
+double getTime(unsigned long long int begin_cycle) {
+  return (double) (getCycle() - begin_cycle) / CYCLE_PER_SEC;
+}
 
 unsigned long long xor128() {
   static unsigned long long rx = 123456789, ry = 362436069, rz = 521288629, rw = 88675123;
@@ -878,9 +893,15 @@ public:
     int bestTargetGrid[GRID_SIZE * GRID_SIZE];
     int minStepCnt = INT_MAX;
     double bestScore = 0;
+    double currentScore = 0;
     Move fire = getFireMove();
+    double totalDiff = 0.0;
+    double k = 2.0;
+    int R = 500000;
+    int t1, t2;
 
-    while (tryCount < 1000) {
+    while (tryCount < 10000) {
+      double remainTime = (10000 - tryCount) / 10000.0;
       ++tryCount;
       int i = xor128() % g_mappingId;
       int j = xor128() % g_mappingId;
@@ -896,11 +917,21 @@ public:
         memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
         int stepCnt = buildMoves().size();
         double ss = ret.score * 1.0 / max(1, stepCnt);
+        double diffScore = ss - currentScore;
 
-        if (stepCnt > 0 && bestScore < ss) {
-          bestScore = ss;
-          minStepCnt = stepCnt;
-          memcpy(bestTargetGrid, g_targetGrid, sizeof(g_targetGrid));
+        if (stepCnt > 0) {
+          if (diffScore > 0 || (xor128() % R < R * exp(diffScore / (k * sqrt(remainTime))))) {
+            currentScore = ss;
+
+            if (bestScore < ss) {
+              bestScore = ss;
+              minStepCnt = stepCnt;
+              memcpy(bestTargetGrid, g_targetGrid, sizeof(g_targetGrid));
+            }
+          } else {
+            assert(canShuffleColorMapping(i, j));
+            shuffleColorMapping(i, j);
+          }
         } else {
           assert(canShuffleColorMapping(i, j));
           shuffleColorMapping(i, j);
