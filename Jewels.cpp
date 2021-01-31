@@ -111,6 +111,7 @@ const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // N = 10
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 0, 1, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
@@ -119,7 +120,6 @@ const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
     X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 1, 0, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
@@ -310,9 +310,9 @@ const int CHAIN_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
     X, 2, 3, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 3, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 4, 5, 6, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 5, 6, 7, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 6, 7, E, E,  E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 7, E, E, E,  E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 5, 6, 9, 7, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 6, 9, 7, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 8, 7, 8, 8, 9, E, E, E, E, E, E, E, E, E, E, E, X,
     X, X, X, X,  X,  X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X,  X,  X,  X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X,  X,  X,  X,  X, X, X, X, X, X, X, X, X, X, X, X, X,
@@ -978,6 +978,8 @@ public:
       return Move(1, 5, 1, 11);
     } else if (N == 16) {
       return Move(1, 5, 1, 12);
+    } else if (N == 10) {
+      return Move(1, 2, 1, 9);
     } else if (N == 9) {
       return Move(1, 5, 2, 6);
     } else {
