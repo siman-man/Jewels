@@ -523,6 +523,8 @@ int g_remainJewelsCounter[MAX_C + 1];
 int g_jewelsMapping[GRID_SIZE * GRID_SIZE];
 int g_mappingCount[GRID_SIZE * GRID_SIZE];
 int g_chunkCounter[GRID_SIZE * GRID_SIZE];
+int g_surplusJewelsCount[MAX_C + 1];
+int g_lackJewelsCount[MAX_C + 1];
 int g_lineHeight[GRID_SIZE];
 ll g_removed[GRID_SIZE * GRID_SIZE];
 int g_turn;
@@ -618,7 +620,7 @@ public:
           fprintf(stderr, "[time: %d, turn: %d, buildCnt: %d] Que size: %d, extLine: %d\n",
                   g_runtime, g_turn, g_buildTargetGridCnt, (int) g_moveQueue.size(), extLine + 1);
 
-          showJewelsDiff();
+          updateJewelsDiff(true);
         }
       }
 
@@ -1387,7 +1389,7 @@ public:
     fprintf(stderr, "\n");
   }
 
-  void showJewelsDiff() {
+  void updateJewelsDiff(bool debug = false) {
     int lackCnt = 0;
     int supCnt = 0;
     int diffCnt = 0;
@@ -1395,6 +1397,8 @@ public:
     int toCounter[C + 1];
     memset(fromCounter, 0, sizeof(fromCounter));
     memset(toCounter, 0, sizeof(toCounter));
+    memset(g_surplusJewelsCount, 0, sizeof(g_surplusJewelsCount));
+    memset(g_lackJewelsCount, 0, sizeof(g_lackJewelsCount));
 
     for (int x = 1; x <= N; ++x) {
       for (int y = 1; y <= N; ++y) {
@@ -1408,16 +1412,22 @@ public:
     }
 
     for (int color = 1; color <= C; ++color) {
-      fprintf(stderr, "color %d: %d - %d\n", color, fromCounter[color], toCounter[color]);
+      if (debug) {
+        fprintf(stderr, "color %d: %d - %d\n", color, fromCounter[color], toCounter[color]);
+      }
 
       if (fromCounter[color] > toCounter[color]) {
-        supCnt += fromCounter[color] - toCounter[color];
+        g_surplusJewelsCount[color] = fromCounter[color] - toCounter[color];
+        supCnt += g_surplusJewelsCount[color];
       } else {
-        lackCnt += toCounter[color] - fromCounter[color];
+        g_lackJewelsCount[color] = toCounter[color] - fromCounter[color];
+        lackCnt += g_lackJewelsCount[color];
       }
     }
 
-    fprintf(stderr, "diffCnt: %d, supCnt: %d, lackCnt: %d,\n", diffCnt, supCnt, lackCnt);
+    if (debug) {
+      fprintf(stderr, "diffCnt: %d, supCnt: %d, lackCnt: %d,\n", diffCnt, supCnt, lackCnt);
+    }
   }
 };
 
