@@ -1288,6 +1288,7 @@ public:
   }
 
   void showJewelsDiff() {
+    int diffCnt = 0;
     int fromCounter[C + 1];
     int toCounter[C + 1];
     memset(fromCounter, 0, sizeof(fromCounter));
@@ -1298,10 +1299,13 @@ public:
         int z = calcZ(y, x);
         if (g_targetGrid[z] == E) continue;
 
+        if (g_grid[z] != g_targetGrid[z]) ++diffCnt;
         ++fromCounter[g_grid[z]];
         ++toCounter[g_targetGrid[z]];
       }
     }
+
+    fprintf(stderr, "diffCnt: %d\n", diffCnt);
 
     for (int color = 1; color <= C; ++color) {
       fprintf(stderr, "color %d: %d - %d\n", color, fromCounter[color], toCounter[color]);
