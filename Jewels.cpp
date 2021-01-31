@@ -915,8 +915,7 @@ public:
 
     while (currentTime < timeLimit) {
       currentTime = getTime(startCycle);
-      double remainTime = (10000 - tryCount) / 10000.0;
-      ++tryCount;
+      double remainTime = (timeLimit - currentTime) / timeLimit;
       int i = xor128() % g_mappingId;
       int j = xor128() % g_mappingId;
       if (!canShuffleColorMapping(i, j)) continue;
@@ -955,8 +954,11 @@ public:
         assert(canShuffleColorMapping(i, j));
         shuffleColorMapping(i, j);
       }
+
+      ++tryCount;
     }
 
+    fprintf(stderr, "tryCount: %d\n", tryCount);
     memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
     memcpy(g_targetGrid, bestTargetGrid, sizeof(bestTargetGrid));
     if (minStepCnt == INT_MAX) return false;
