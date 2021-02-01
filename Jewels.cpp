@@ -90,15 +90,15 @@ const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // N = 9
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
-    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, 1, 0, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 0, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
@@ -985,7 +985,7 @@ public:
     } else if (N == 10) {
       return Move(1, 2, 1, 9);
     } else if (N == 9) {
-      return Move(1, 5, 2, 6);
+      return Move(1, 1, 1, 8);
     } else {
       return Move(1, 1, 1, 8);
     }
