@@ -1051,7 +1051,6 @@ public:
     }
 
     int limit = 1000;
-    memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
     updateJewelsDiff();
 
     while (!needExchangePositions.empty() && limit > 0) {
