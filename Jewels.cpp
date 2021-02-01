@@ -1291,6 +1291,7 @@ public:
         if (id == E) continue;
 
         int height = g_lineHeight[x] + 1;
+        if (height > N) continue;
         int tz = calcZ(height, x);
         g_mappingId = max(g_mappingId, baseId + id);
         g_mappingGrid[tz] = baseId + id;
