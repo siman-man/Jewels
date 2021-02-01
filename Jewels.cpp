@@ -366,10 +366,10 @@ const int CHAIN_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // N = 13
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
-    X, 0, E,  E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, E,  E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, 2, E,  E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 2, 3, E,  E,  E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 19,  E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 20,  E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 2, 21,  E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, 3, 22,  E,  E, E, E, E, E, E, E, E, E, E, E, X,
     X, 2, 3, 4, 18, E,  E,  E, E, E, E, E, E, E, E, E, E, X,
     X, 3, 4, 5, 17, 18, E,  E, E, E, E, E, E, E, E, E, E, X,
     X, 4, 5, 6, 16, 17, 18, E, E, E, E, E, E, E, E, E, E, X,
@@ -641,7 +641,7 @@ public:
           g_moveQueue.pop();
         } while (g_moveQueue.size() > 0 && g_originGrid[move.fromZ] == g_originGrid[move.toZ]);
 
-        if (g_moveQueue.empty() && N <= 12) {
+        if (g_moveQueue.empty() && N <= 13) {
           memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
           Result ret = applyMove(move);
           fprintf(stderr, "[%d - Fire]: moveScore: %d, combo: %d, score: %d\n",
