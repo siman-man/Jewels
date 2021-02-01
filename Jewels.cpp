@@ -195,6 +195,8 @@ const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // N = 14
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 0, 1, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
@@ -207,8 +209,6 @@ const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
     X, 1, 0, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
@@ -387,20 +387,20 @@ const int CHAIN_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // N = 14
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
-    X, 0, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, 2, 4, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 2, 3, 5, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 2, 3, 4, 6, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 3, 4, 5, 7, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 4, 5, 6, 8, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 5, 6, 7, 9, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 6, 7, 8, 10, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 7, 8, 9, 11, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 8, 9, 10, 12, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 9, 10, 11, E,  E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 10, 11, E,  E,  E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 11, E,  E,  E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 20, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 19, 20, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 2, 19, 20, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, 3, 18, 19, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 3, 4, 18, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 3, 4, 5, 17, 18, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 4, 5, 6, 16, 17, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 5, 6, 7, 15, 16, 17, E, E, E, E, E, E, E, E, E, E, X,
+    X, 6, 7, 8, 14, 15, 16, E, E, E, E, E, E, E, E, E, E, X,
+    X, 7, 8, 9, 13, 14, 15, E, E, E, E, E, E, E, E, E, E, X,
+    X, 8, 9, 12, 10, 13, 14, E, E, E, E, E, E, E, E, E, E, X,
+    X, 9, 12, 10, 13,  E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 11, 10, 11, 11, 12, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, E, E,  E,  E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, X,  X,  X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X,  X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
@@ -641,7 +641,7 @@ public:
           g_moveQueue.pop();
         } while (g_moveQueue.size() > 0 && g_originGrid[move.fromZ] == g_originGrid[move.toZ]);
 
-        if (g_moveQueue.empty() && N <= 13) {
+        if (g_moveQueue.empty() && N <= 14) {
           memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
           Result ret = applyMove(move);
           fprintf(stderr, "[%d - Fire]: moveScore: %d, combo: %d, score: %d\n",
@@ -973,7 +973,7 @@ public:
     if (N == 13) {
       return Move(1, 5, 1, 12);
     } else if (N == 14) {
-      return Move(1, 3, 1, 10);
+      return Move(1, 5, 1, 12);
     } else if (N == 15) {
       return Move(1, 5, 1, 11);
     } else if (N == 16) {
