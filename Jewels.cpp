@@ -58,7 +58,7 @@ const int LINE_SCORE[MAX_N + 1] = {
 };
 
 const int EXT_LINE[MAX_N + 1] = {
-  0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 3, 3, 4, 5, 6, 8, 9
+  0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 3, 3, 4, 5, 6, 8, 9
 };
 
 const int EXT_LINE_MIN[MAX_N + 1] = {
@@ -283,14 +283,14 @@ const int CHAIN_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, 2, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 2, 3, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 2, 3, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 3, 4, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 4, 5, 6, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 5, 6, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 6, E, E, E,  E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 12, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 2, 11, 12, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, 3, 10, 11, 12, E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 3, 4, 9, 10, 11, E, E, E, E, E, E, E, E, E, E, X,
+    X, 3, 4, 5, 9, 10, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 4, 5, 8, 6, 9, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 5, 8, 6, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 7, 6, 7, 7,  8, E, E, E, E, E, E, E, E, E, E, E, X,
     X, X, X, X, X,  X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X, X,  X,  X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X, X,  X,  X,  X, X, X, X, X, X, X, X, X, X, X, X, X,
