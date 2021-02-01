@@ -641,7 +641,7 @@ public:
           g_moveQueue.pop();
         } while (g_moveQueue.size() > 0 && g_originGrid[move.fromZ] == g_originGrid[move.toZ]);
 
-        if (g_moveQueue.empty() && N <= 11) {
+        if (g_moveQueue.empty() && N <= 12) {
           memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
           Result ret = applyMove(move);
           fprintf(stderr, "[%d - Fire]: moveScore: %d, combo: %d, score: %d\n",
