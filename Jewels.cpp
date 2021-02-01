@@ -1052,6 +1052,8 @@ public:
     }
 
     int limit = 1000;
+    memcpy(g_grid, g_originGrid, sizeof(g_originGrid));
+    updateJewelsDiff();
 
     while (!needExchangePositions.empty() && limit > 0) {
       int z = needExchangePositions.front();
@@ -1108,14 +1110,26 @@ public:
     }
 
     for (int x = 1; x <= N; ++x) {
-      for (int y = N; y >= 1; --y) {
+      for (int y = 1; y <= N; ++y) {
         int z = calcZ(y, x);
+        int toColor = g_grid[z];
         if (g_targetGrid[z] == g_grid[z]) continue;
         if (g_grid[z] != targetColor) continue;
+        if (g_lackJewelsCount[fromColor] > 0 && g_targetGrid[z] == E) continue;
+        if (g_surplusJewelsCount[toColor] > 0) continue;
 
         swap(g_grid[fromZ], g_grid[z]);
 
         if (!isFire(fromZ) && !isFire(z)) {
+          if (g_targetGrid[z] == E) {
+            if (g_surplusJewelsCount[fromColor] > 0) {
+              g_surplusJewelsCount[fromColor]--;
+            }
+            if (g_lackJewelsCount[toColor] > 0) {
+              g_lackJewelsCount[toColor]--;
+            }
+          }
+
           return Move(fromY, fromX, y, x);
         }
 
