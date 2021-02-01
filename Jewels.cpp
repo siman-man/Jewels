@@ -979,7 +979,7 @@ public:
     } else if (N == 16) {
       return Move(1, 5, 1, 12);
     } else if (N == 12) {
-      return Move(1, 2, 1, 11);
+      return Move(1, 2, 1, 9);
     } else if (N == 11) {
       return Move(1, 3, 1, 10);
     } else if (N == 10) {
