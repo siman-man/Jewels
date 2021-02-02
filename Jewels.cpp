@@ -893,6 +893,19 @@ public:
     mappingJewelsToTargetGrid();
     memcpy(g_grid, g_targetGrid, sizeof(g_targetGrid));
 
+    for (int x = 1; x <= N; ++x) {
+      for (int y = 2; y <= N; ++y) {
+        int z = calcZ(y, x);
+        if (g_targetGrid[z] == E) continue;
+        int dz = calcZ(y - 1, x);
+
+        if (g_targetGrid[dz] == E) {
+          memcpy(g_grid, g_copyGrid, sizeof(g_copyGrid));
+          return false;
+        }
+      }
+    }
+
     Move move(1, 1, 1, 1);
     int score = applyMove(move, true).score;
     // showTargetGrid();
