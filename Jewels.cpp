@@ -71,9 +71,9 @@ const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 1, 1, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 0, 1, 1, 0, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 1, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
@@ -261,14 +261,14 @@ const int CHAIN_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // N = 8
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
-    X, 6, E,  E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 6, E, E,  E,  E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 5, 6, E, E,  E,  E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 4, 5, E, E,  E,  E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 3, 4, 5, E,  E,  E,  E, E, E, E, E, E, E, E, E, E, X,
-    X, 2, 0, 3, 4,  7,  E,  E, E, E, E, E, E, E, E, E, E, X,
-    X, 2, 0, 3, 8,  E,  E,  E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 0, 1, 1,  2,  9,  E, E, E, E, E, E, E, E, E, E, X,
+    X, 6, 5, 6, 6, 7, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 4, 7, 5, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 4, 7, 5, E, E,  E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 3, 4, E, E, E,  E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 3, E, E, E, E,  E,  E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 0, 3, E, E,  E,  E, E, E, E, E, E, E, E, E, E, X,
+    X, 2, 0, E, E, E,  E,  E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 0, 1, 1, 2,  E,  E, E, E, E, E, E, E, E, E, E, X,
     X, X, X, X,  X,  X,  X,  X, X, X, X, X, X, X, X, X, X, X,
     X, X, X,  X,  X,  X,  X,  X, X, X, X, X, X, X, X, X, X, X,
     X, X, X,  X,  X,  X,  X,  X, X, X, X, X, X, X, X, X, X, X,
@@ -430,14 +430,14 @@ const int CHAIN_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, 0, 20, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, 19, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 0, 1, 2, 19, E, E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 1, 2, 3, 18, 19,  E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 19, E,  E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 1, 2, 19, E,  E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 1, 2, 3, 18, 19, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 2, 3, 4, 18, E,  E,  E, E, E, E, E, E, E, E, E, E, X,
-    X, 3, 4, 5, 17, 18,  E,  E, E, E, E, E, E, E, E, E, E, X,
-    X, 4, 5, 6, 16, 17,  E,  E, E, E, E, E, E, E, E, E, E, X,
-    X, 5, 6, 7, 15, 16, 17,  E, E, E, E, E, E, E, E, E, E, X,
-    X, 6, 7, 8,  14, 15, 16,  E, E, E, E, E, E, E, E, E, E, X,
+    X, 3, 4, 5, 17, 18, E,  E, E, E, E, E, E, E, E, E, E, X,
+    X, 4, 5, 6, 16, 17, E,  E, E, E, E, E, E, E, E, E, E, X,
+    X, 5, 6, 7, 15, 16, 17, E, E, E, E, E, E, E, E, E, E, X,
+    X, 6, 7, 8,  14, 15, 16, E, E, E, E, E, E, E, E, E, E, X,
     X, 7, 8,  9,  13, 14, 15, E, E, E, E, E, E, E, E, E, E, X,
     X, 8, 9,  12, 10, 13, 14, E, E, E, E, E, E, E, E, E, E, X,
     X, 9,  12, 10, 13, E,  E, E, E, E, E, E, E, E, E, E, E, X,
@@ -987,7 +987,7 @@ public:
     } else if (N == 9) {
       return Move(1, 2, 1, 9);
     } else {
-      return Move(1, 4, 2, 3);
+      return Move(1, 5, 2, 4);
     }
   }
 
