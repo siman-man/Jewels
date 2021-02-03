@@ -391,7 +391,7 @@ const int CHAIN_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // N = 14
   {
     X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,
-    X, 0, 20, E, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 0, 20, 0, E, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 0, 1, 19, 20, E, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 0, 1, 2, 19, 20, E, E, E, E, E, E, E, E, E, E, E, X,
     X, 1, 2, 3, 18, 19, E, E, E, E, E, E, E, E, E, E, E, X,
@@ -403,7 +403,7 @@ const int CHAIN_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
     X, 7, 8,  9,  13, 14, 15, E, E, E, E, E, E, E, E, E, E, X,
     X, 8, 9,  12, 10, 13, 14, E, E, E, E, E, E, E, E, E, E, X,
     X, 9,  12, 10, 13, E,  E, E, E, E, E, E, E, E, E, E, E, X,
-    X, 11, 10, 11, 11, 12, E, E, E, E, E, E, E, E, E, E, E, X,
+    X, 11, 10, 11, 11, 12, 10, 10, E, E, E, E, E, E, E, E, E, X,
     X, E, E,  E,  E,  E,  E,  E, E, E, E, E, E, E, E, E, E, X,
     X, X,  X,  X,  X,  X, X, X, X, X, X, X, X, X, X, X, X, X,
     X, X,  X,  X,  X,  X,  X, X, X, X, X, X, X, X, X, X, X, X,
