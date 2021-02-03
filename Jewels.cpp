@@ -65,6 +65,10 @@ const int EXT_LINE_MIN[MAX_N + 1] = {
   0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 3, 3, 3, 3, 3, 7
 };
 
+const int MAX_COMBO_NUM[MAX_N + 1] = {
+  0, 0, 0, 0, 0, 0, 0, 0, 6, 7, 8, 9, 10, 11, 15, 17, 19
+};
+
 const int BASE_SCORE_PATTERN[9][GRID_SIZE * GRID_SIZE] = {
   // N = 8
   {
@@ -648,7 +652,7 @@ public:
           fprintf(stderr, "[%d - Fire]: moveScore: %d, combo: %d, score: %d\n",
                   g_turn, ret.moveScore, ret.combo, ret.score);
 
-          if (ret.combo <= N - 2 && g_turn < 999) {
+          if (ret.combo <= MAX_COMBO_NUM[N] && g_turn < 999) {
             move = fixOutburst();
 
             if (move.fromY == -1) {
